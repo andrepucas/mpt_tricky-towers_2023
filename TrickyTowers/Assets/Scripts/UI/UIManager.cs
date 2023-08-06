@@ -8,9 +8,11 @@ public class UIManager : MonoBehaviour
     // V A R I A B L E S
 
     [SerializeField] private GameDataSO _data;
+    [SerializeField] private GameObject _fpsCounter;
 
     [Header("PANELS")]
     [SerializeField] private UIPanelMainMenu _panelMainMenu;
+    [SerializeField] private UIPanelGameplay _panelGameplay;
 
     // G A M E   O B J E C T
 
@@ -26,6 +28,7 @@ public class UIManager : MonoBehaviour
             case GameState.SETUP:
 
                 Debug.Log("SETUP");
+                _fpsCounter.SetActive(_data.DisplayFPS);
                 CloseAllPanels();
                 break;
 
@@ -35,10 +38,16 @@ public class UIManager : MonoBehaviour
                 _panelMainMenu.Open(_data.PanelFade);
                 break;
 
-            case GameState.PRE_START:
+            // case GameState.PRE_START:
 
-                Debug.Log("PRE-START");
+            //     Debug.Log("PRE-START");
+            //     break;
+
+            case GameState.GAMEPLAY:
+
+                Debug.Log("GAMEPLAY");
                 _panelMainMenu.Close(_data.PanelFade);
+                _panelGameplay.Open(_data.PanelFade);
                 break;
 
         }
@@ -47,5 +56,6 @@ public class UIManager : MonoBehaviour
     private void CloseAllPanels()
     {
         _panelMainMenu.Close();
+        _panelGameplay.Close();
     }
 }
