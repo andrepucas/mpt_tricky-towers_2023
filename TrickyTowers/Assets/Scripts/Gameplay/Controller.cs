@@ -29,7 +29,7 @@ public class Controller : MonoBehaviour
     private int _inputDragDir;
     private bool _inputDraggingSide;
     private bool _inputDraggingDown;
-    private bool _inputSwiped;
+    private bool _inputPressedThisBlock;
 
     // G A M E   O B J E C T
 
@@ -38,22 +38,23 @@ public class Controller : MonoBehaviour
     private void OnEnable()
     {
         UIPanelMainMenu.OnPlayButtons += Play;
+        FallingBlock.Placed += GetNewBlock;
     }
 
     private void OnDisable()
     {
         UIPanelMainMenu.OnPlayButtons -= Play;
+        FallingBlock.Placed -= GetNewBlock;
     }
 
     private void Update()
     {
-        if (_currentState != GameState.GAMEPLAY) return;
-
-        _inputSwiped = false;
+        if (_currentState != GameState.GAMEPLAY || _currentBlock == null) return;
 
         // Input - On press.
         if (Input.GetMouseButtonDown(0))
         {
+            _inputPressedThisBlock = true;
             _inputPressTime = Time.time;
             _inputPressPos = Input.mousePosition;
             _inputLastHoldPos = _inputPressPos;
@@ -62,6 +63,8 @@ public class Controller : MonoBehaviour
         // Input - On drag.
         else if (Input.GetMouseButton(0) && Input.mousePosition != _inputLastHoldPos)
         {
+            if (!_inputPressedThisBlock) return;
+
             _inputDragDir = (Input.mousePosition.x - _inputLastHoldPos.x > 0) ? 1 : -1;
             _inputDraggedX = Mathf.Abs(Input.mousePosition.x - _inputLastHoldPos.x);
             _inputDraggedY = _inputLastHoldPos.y - Input.mousePosition.y;
@@ -89,6 +92,8 @@ public class Controller : MonoBehaviour
         // Input - On released.
         else if (Input.GetMouseButtonUp(0))
         {
+            if (!_inputPressedThisBlock) return;
+
             // If not being dragged.
             if (!(_inputDraggingSide || _inputDraggingDown))
             {
@@ -105,16 +110,13 @@ public class Controller : MonoBehaviour
                 {
                     _currentBlock.transform.Translate(
                         _data.SwipeSnap * _inputDragDir, 0, 0, Space.World);
-
-                    _inputSwiped = true;
                 }
             }
 
             _inputDraggingSide = false;
             _inputDraggingDown = false;
+            _inputPressedThisBlock = false;
         }
-
-        if (_inputSwiped) return;
 
         // If being dragged down, move block down fast.
         if (_inputDraggingDown) _currentBlock.transform.Translate(
@@ -123,7 +125,6 @@ public class Controller : MonoBehaviour
         // If not, move block down at normal speed.
         else _currentBlock.transform.Translate(
             Vector3.down * _data.DownSpeed * Time.deltaTime, Space.World);
-
     }
 
     // M E T H O D S
@@ -136,7 +137,7 @@ public class Controller : MonoBehaviour
         {
             case GameState.SETUP:
 
-                _currentBlock.SetKinematic(true);
+                _currentBlock.Control(true);
                 _inputWidth = Screen.width / _data.WidthUnits;
                 _inputHeight = Screen.height / _data.HeightUnits;
 
@@ -161,6 +162,12 @@ public class Controller : MonoBehaviour
     {
         //_inVersusMode = p_versusMode;
         UpdateGameState(GameState.GAMEPLAY);
+    }
+
+    private void GetNewBlock()
+    {
+        _currentBlock = null;
+        _inputPressedThisBlock = false;
     }
 
     // C O R O U T I N E S
