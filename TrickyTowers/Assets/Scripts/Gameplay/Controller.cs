@@ -18,15 +18,18 @@ public class Controller : MonoBehaviour
     private GameState _currentState;
     [SerializeField] private FallingBlock _currentBlock;
 
-    // Input.
-    private Vector3 _inputLastPressPos;
+    // Input control.
+    private Vector3 _inputPressPos;
+    private Vector3 _inputLastHoldPos;
+    private float _inputPressTime;
     private float _inputWidth;
     private float _inputHeight;
     private float _inputDraggedX;
     private float _inputDraggedY;
     private int _inputDragDir;
-    private bool _inputIsMoving;
+    private bool _inputDraggingSide;
     private bool _inputDraggingDown;
+    private bool _inputSwiped;
 
     // G A M E   O B J E C T
 
@@ -46,51 +49,72 @@ public class Controller : MonoBehaviour
     {
         if (_currentState != GameState.GAMEPLAY) return;
 
+        _inputSwiped = false;
+
         // Input - On press.
         if (Input.GetMouseButtonDown(0))
         {
-            _inputLastPressPos = Input.mousePosition;
+            _inputPressTime = Time.time;
+            _inputPressPos = Input.mousePosition;
+            _inputLastHoldPos = _inputPressPos;
         }
 
         // Input - On drag.
-        else if (Input.GetMouseButton(0) && Input.mousePosition != _inputLastPressPos)
+        else if (Input.GetMouseButton(0) && Input.mousePosition != _inputLastHoldPos)
         {
-            _inputDragDir = (Input.mousePosition.x - _inputLastPressPos.x > 0) ? 1 : -1;
-            _inputDraggedX = Mathf.Abs(Input.mousePosition.x - _inputLastPressPos.x);
-            _inputDraggedY = _inputLastPressPos.y - Input.mousePosition.y;
+            _inputDragDir = (Input.mousePosition.x - _inputLastHoldPos.x > 0) ? 1 : -1;
+            _inputDraggedX = Mathf.Abs(Input.mousePosition.x - _inputLastHoldPos.x);
+            _inputDraggedY = _inputLastHoldPos.y - Input.mousePosition.y;
 
-            // Dragging sideways.
-            if (_inputDraggedX > (_inputWidth * _data.BlockSideSnap))
+            // If dragging sideways.
+            if (_inputDraggedX > (_inputWidth * _data.DragSideSnap))
             {
                 _currentBlock.transform.Translate(
-                    _data.BlockSideSnap * _inputDragDir, 0, 0, Space.World);
+                    _data.DragSideSnap * _inputDragDir, 0, 0, Space.World);
 
-                _inputLastPressPos = Input.mousePosition;
-                _inputIsMoving = true;
+                _inputLastHoldPos = Input.mousePosition;
+                _inputDraggingSide = true;
                 _inputDraggingDown = false;
             }
 
-            // Dragging down.
+            // If dragging down.
             else if (_inputDraggedY > _inputHeight)
             {
+                _inputLastHoldPos = Input.mousePosition;
+                _inputDraggingSide = false;
                 _inputDraggingDown = true;
-                _inputLastPressPos = Input.mousePosition;
-                _inputIsMoving = true;
             }
         }
 
         // Input - On released.
         else if (Input.GetMouseButtonUp(0))
         {
-            if (!_inputIsMoving)
+            // If not being dragged.
+            if (!(_inputDraggingSide || _inputDraggingDown))
             {
                 // Rotate block.
                 _currentBlock.transform.Rotate(0, 0, 90 * _data.RotateDir);
             }
 
-            _inputIsMoving = false;
+            // If was being dragged to the side.
+            else if (_inputDraggingSide)
+            {
+                // If it was swiped (fast movement).
+                if (_inputDraggedX > _data.SwipeMinUnits &&
+                    Time.time - _inputPressTime < _data.SwipeMaxTime)
+                {
+                    _currentBlock.transform.Translate(
+                        _data.SwipeSnap * _inputDragDir, 0, 0, Space.World);
+
+                    _inputSwiped = true;
+                }
+            }
+
+            _inputDraggingSide = false;
             _inputDraggingDown = false;
         }
+
+        if (_inputSwiped) return;
 
         // If being dragged down, move block down fast.
         if (_inputDraggingDown) _currentBlock.transform.Translate(
@@ -98,7 +122,7 @@ public class Controller : MonoBehaviour
 
         // If not, move block down at normal speed.
         else _currentBlock.transform.Translate(
-            Vector3.down * _data.FallSpeed * Time.deltaTime, Space.World);
+            Vector3.down * _data.DownSpeed * Time.deltaTime, Space.World);
 
     }
 
