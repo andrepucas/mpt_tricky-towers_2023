@@ -23,4 +23,4 @@ MonoBehaviour:
   _dragSideSnap: 0.5
   _swipeMaxTime: 0.3
   _swipeMinUnits: 3
-  _swipeSnap: 5
+  _swipeSnap: 1

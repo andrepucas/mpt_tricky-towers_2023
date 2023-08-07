@@ -13,10 +13,11 @@ public class Controller : MonoBehaviour
 
     // V A R I A B L E S
 
+    [SerializeField] private BlockPoolSpawner _blockPool;
     [SerializeField] private GameDataSO _data;
 
     private GameState _currentState;
-    [SerializeField] private FallingBlock _currentBlock;
+    [SerializeField]private Block _currentBlock;
 
     // Input control.
     private Vector3 _inputPressPos;
@@ -38,13 +39,13 @@ public class Controller : MonoBehaviour
     private void OnEnable()
     {
         UIPanelMainMenu.OnPlayButtons += Play;
-        FallingBlock.Placed += GetNewBlock;
+        Block.Placed += GetNewBlock;
     }
 
     private void OnDisable()
     {
         UIPanelMainMenu.OnPlayButtons -= Play;
-        FallingBlock.Placed -= GetNewBlock;
+        Block.Placed -= GetNewBlock;
     }
 
     private void Update()
@@ -119,8 +120,11 @@ public class Controller : MonoBehaviour
         }
 
         // If being dragged down, move block down fast.
-        if (_inputDraggingDown) _currentBlock.transform.Translate(
-            Vector3.down * _data.DragDownSpeed * Time.deltaTime, Space.World);
+        if (_inputDraggingDown && _inputPressedThisBlock)
+        {
+            _currentBlock.transform.Translate(Vector3.down * 
+                _data.DragDownSpeed * Time.deltaTime, Space.World);
+        }
 
         // If not, move block down at normal speed.
         else _currentBlock.transform.Translate(
@@ -137,7 +141,8 @@ public class Controller : MonoBehaviour
         {
             case GameState.SETUP:
 
-                _currentBlock.Control(true);
+                //_currentBlock.Control(true);
+                _blockPool.Initialize();
                 _inputWidth = Screen.width / _data.WidthUnits;
                 _inputHeight = Screen.height / _data.HeightUnits;
 
@@ -152,6 +157,8 @@ public class Controller : MonoBehaviour
             //     break;
 
             case GameState.GAMEPLAY:
+
+                GetNewBlock();
                 break;
         }
 
@@ -168,6 +175,9 @@ public class Controller : MonoBehaviour
     {
         _currentBlock = null;
         _inputPressedThisBlock = false;
+
+        _currentBlock = _blockPool.GetBlock();
+        _currentBlock.Control(true);
     }
 
     // C O R O U T I N E S

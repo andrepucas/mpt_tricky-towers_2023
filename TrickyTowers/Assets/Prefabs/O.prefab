@@ -123,10 +123,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 5695804657445213946}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a63aac77f901f414cb99bc1520be65a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 74d10a096aee1f7499393df02b5bb446, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _type: 4
   _rb: {fileID: 7018512205256087653}
+  _colliders:
+  - {fileID: 531190712974107298}
+  _staticRadius: 0.1
 --- !u!1 &6536029156940790096
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,5 +206,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.9, y: 1.9}
+  m_Size: {x: 1.8, y: 1.8}
   m_EdgeRadius: 0.05

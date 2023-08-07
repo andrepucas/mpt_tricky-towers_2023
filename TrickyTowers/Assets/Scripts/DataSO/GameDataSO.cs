@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Data holder of UI variables.
+/// Data holder of game variables.
 /// </summary>
 [CreateAssetMenu(fileName = "Game Data", menuName = "Data/Game Data")]
 public class GameDataSO : ScriptableObject
@@ -49,9 +49,4 @@ public class GameDataSO : ScriptableObject
     public float SwipeMaxTime => _swipeMaxTime;
     public float SwipeMinUnits => _swipeMinUnits;
     public float SwipeSnap => _swipeSnap; 
-    
-
-    
-
-    
 }

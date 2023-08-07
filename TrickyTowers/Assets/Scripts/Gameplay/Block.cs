@@ -5,16 +5,20 @@ using UnityEngine;
 /// <summary>
 /// Direct reference to each block. Toggles physics.
 /// </summary>
-public class FallingBlock : MonoBehaviour
+public class Block : MonoBehaviour
 {
     // E V E N T S
 
     public static event Action Placed;
-    
+
     // V A R I A B L E S
 
+    [SerializeField] private BlockType _type;
     [SerializeField] private Rigidbody2D _rb;
+    [SerializeField] private BoxCollider2D[] _colliders;
+    [SerializeField] private float _staticRadius;
 
+    public BlockType Type => _type;
     private bool _isControlled;
 
     // G A M E   O B J E C T
@@ -38,7 +42,9 @@ public class FallingBlock : MonoBehaviour
 
         else
         {
-            _rb.velocity = Vector2.zero;
+            foreach(BoxCollider2D f_collider in _colliders)
+                f_collider.edgeRadius = _staticRadius;
+
             _rb.constraints = RigidbodyConstraints2D.None;
         }
     }
