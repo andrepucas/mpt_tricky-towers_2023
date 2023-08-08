@@ -15,6 +15,7 @@ public class GuideBeam : MonoBehaviour
     private Dictionary<BlockType, List<int>> _blockWidths;
     private Dictionary<BlockType, List<float>> _blockOffsets;
 
+    private Transform _parent;
     private BlockType _currentType;
     private Vector2 _auxSize;
     private Vector2 _auxPos;
@@ -25,6 +26,7 @@ public class GuideBeam : MonoBehaviour
     public void Initialize()
     {
         _renderer.enabled = false;
+        _parent = transform.parent;
 
         _auxSize = new Vector2(0, 200);
         _auxPos = Vector2.zero;
@@ -76,5 +78,11 @@ public class GuideBeam : MonoBehaviour
         // Offset.
         _auxPos.y = _blockOffsets[_currentType][_rotationIndex];
         transform.localPosition = _auxPos;
+    }
+
+    public void Stop()
+    {
+        _renderer.enabled = false;
+        transform.SetParent(_parent);
     }
 }

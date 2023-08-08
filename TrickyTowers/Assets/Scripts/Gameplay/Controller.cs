@@ -22,6 +22,7 @@ public class Controller : MonoBehaviour
 
     private GameState _currentState;
     private Block _currentBlock;
+    private int _currentLives;
 
     // Input control.
     private Vector3 _inputPressPos;
@@ -38,20 +39,26 @@ public class Controller : MonoBehaviour
 
     // G A M E   O B J E C T
 
-    private void Awake() => UpdateGameState(GameState.SETUP);
+    private void Awake()
+    {
+        UpdateGameState(GameState.SETUP);
+        UIManager.OnSetupComplete += () => UpdateGameState(GameState.MAIN_MENU);
+    }
 
     private void OnEnable()
     {
         UIPanelMainMenu.OnPlayButtons += PreStart;
         UIPanelPreStart.OnCountdownEnd += Play;
-        Block.Placed += GetNewBlock;
+        Block.OnPlaced += GetNewBlock;
+        Block.OnOutOfBounds += HandleBlockLost;
     }
 
     private void OnDisable()
     {
         UIPanelMainMenu.OnPlayButtons -= PreStart;
         UIPanelPreStart.OnCountdownEnd -= Play;
-        Block.Placed -= GetNewBlock;
+        Block.OnPlaced -= GetNewBlock;
+        Block.OnOutOfBounds -= HandleBlockLost;
     }
 
     private void Update()
@@ -154,22 +161,30 @@ public class Controller : MonoBehaviour
                 _levelObjs.SetActive(false);
                 _blockPool.Initialize();
                 _guideBeam.Initialize();
-
-                StartCoroutine(SetupDelay());
                 break;
 
             case GameState.MAIN_MENU:
-
                 break;
 
             case GameState.PRE_START:
 
                 _levelObjs.SetActive(true);
+                if (_data.InfiniteLives) _currentLives = -1;
+                else _currentLives = _data.NumberOfLives;
+
                 break;
 
             case GameState.GAMEPLAY:
+                break;
 
-                GetNewBlock();
+            case GameState.PAUSE:
+                break;
+
+            case GameState.END_LOSE:
+
+                _currentBlock.Control(false);
+                _currentBlock = null;
+                _guideBeam.Stop();
                 break;
         }
 
@@ -184,6 +199,7 @@ public class Controller : MonoBehaviour
 
     private void Play()
     {
+        GetNewBlock();
         UpdateGameState(GameState.GAMEPLAY);
     }
 
@@ -191,17 +207,22 @@ public class Controller : MonoBehaviour
     {
         _currentBlock = null;
         _inputPressedThisBlock = false;
-        
+
         _currentBlock = _blockPool.GetBlock();
         _currentBlock.Control(true);
         _guideBeam.Follow(_currentBlock);
     }
 
-    // C O R O U T I N E S
-
-    private IEnumerator SetupDelay()
+    private void HandleBlockLost(Block p_block)
     {
-        yield return new WaitForSeconds(_data.SetupDelay);
-        UpdateGameState(GameState.MAIN_MENU);
+        _currentLives--;
+
+        // If no more lives. End game.
+        if (_currentLives == 0) UpdateGameState(GameState.END_LOSE);
+
+        // If the lost block was the player's. Get a new one.
+        else if (p_block == _currentBlock) GetNewBlock();
+
+        _blockPool.SetStandby(p_block);
     }
 }

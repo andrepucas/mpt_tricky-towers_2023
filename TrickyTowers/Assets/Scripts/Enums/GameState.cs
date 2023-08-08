@@ -9,5 +9,6 @@ public enum GameState
     PRE_START,
     GAMEPLAY,
     PAUSE,
-    END,
+    END_LOSE,
+    END_WIN,
 }

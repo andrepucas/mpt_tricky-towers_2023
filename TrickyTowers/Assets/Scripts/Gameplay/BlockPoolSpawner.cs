@@ -5,7 +5,8 @@ public class BlockPoolSpawner : MonoBehaviour
 {
     // V A R I A B L E S
 
-    [SerializeField] private BlocksDataSO _data;
+    [SerializeField] private Transform _activeBlocksFolder;
+    [SerializeField] private BlocksDataSO _blocksData;
 
     private const int POOL_HEIGHT = 100;
 
@@ -22,7 +23,7 @@ public class BlockPoolSpawner : MonoBehaviour
 
     public void Initialize()
     {
-        transform.localPosition = _data.SpawnPos;
+        transform.localPosition = _blocksData.SpawnPos;
 
         _blockPrefabs = new Dictionary<BlockType, GameObject>();
         _standbyPool = new Dictionary<BlockType, List<Block>>();
@@ -30,14 +31,14 @@ public class BlockPoolSpawner : MonoBehaviour
 
         _allTypes = new List<BlockType>();
 
-        foreach (BlockData f_block in _data.AllBlocks)
+        foreach (BlockData f_block in _blocksData.AllBlocks)
         {
             _blockPrefabs.Add(f_block.Type, f_block.Prefab);
             _standbyPool.Add(f_block.Type, new List<Block>());
 
             _allTypes.Add(f_block.Type);
 
-            for (int i = 0; i < _data.InitialAmountEach; i++)
+            for (int i = 0; i < _blocksData.InitialAmountEach; i++)
                 SetStandby(CreateBlock(f_block.Type));
         }
     }
@@ -49,7 +50,11 @@ public class BlockPoolSpawner : MonoBehaviour
         _standbyPool[p_block.Type].Add(p_block);
 
         // If object is active, remove it from active list.
-        if (_activePool.Contains(p_block)) _activePool.Remove(p_block);
+        if (_activePool.Contains(p_block))
+        {
+            _activePool.Remove(p_block);
+            p_block.transform.SetParent(transform);
+        }
     }
 
     public Block GetBlock()
@@ -67,8 +72,9 @@ public class BlockPoolSpawner : MonoBehaviour
         // If not, create it.
         else _block = CreateBlock(_newBlockType);
 
-        // Enable and place it at its spawn position.
+        // Place it at the spawners position, in a static parent, and enable it.
         _block.transform.localPosition = Vector3.zero;
+        _block.transform.SetParent(_activeBlocksFolder);
         _block.gameObject.SetActive(true);
 
         // Manage pools.

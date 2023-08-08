@@ -76,5 +76,8 @@ MonoBehaviour:
     - 0.5
     - 0
     - 0.5
+  _controlledBlockRadius: 0.05
+  _tagLose: Lose Area
+  _tagWin: Win Area
   _spawnPos: {x: 0, y: 16}
   _initialAmountEach: 5

@@ -129,10 +129,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 2
   _rb: {fileID: 7048479481511007244}
-  _staticRadius: 0.1
   _colliders:
   - {fileID: 436221314004563799}
   - {fileID: 6042795210587845297}
+  _blocksData: {fileID: 11400000, guid: ae02d56b61310724185b0c3f380e0279, type: 2}
 --- !u!1 &7327632733828106466
 GameObject:
   m_ObjectHideFlags: 0

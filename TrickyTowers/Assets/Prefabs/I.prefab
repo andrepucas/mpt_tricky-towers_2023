@@ -130,7 +130,7 @@ MonoBehaviour:
   _rb: {fileID: 7733145677314659966}
   _colliders:
   - {fileID: 3115963381097739983}
-  _staticRadius: 0.1
+  _blocksData: {fileID: 11400000, guid: ae02d56b61310724185b0c3f380e0279, type: 2}
 --- !u!1 &7371237050584899684
 GameObject:
   m_ObjectHideFlags: 0

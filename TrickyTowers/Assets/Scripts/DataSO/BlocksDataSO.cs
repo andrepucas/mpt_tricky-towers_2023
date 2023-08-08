@@ -9,14 +9,24 @@ public class BlocksDataSO : ScriptableObject
 {
     [Header("BLOCKS")]
     [SerializeField] private BlockData[] _allBlocks;
-    [Tooltip("Position, relative to the camera, for the controlled block to appear at.")]
+    [Tooltip("Collider radius of the controlled block. A value smaller than 0.1 (static collider size) allows for slight interception with static blocks.")]
+    [SerializeField][Range(0.01f, 0.1f)] private float _controlledBlockRadius = 0.05f;
+    [Tooltip("Name of the losing area colliders.")]
+    [SerializeField] private string _tagLose;
+    [Tooltip("Name of the winning area collider.")]
+    [SerializeField] private string _tagWin;
+
+    public IReadOnlyList<BlockData> AllBlocks => _allBlocks;
+    public float ControlledBlockRadius => _controlledBlockRadius;
+    public string TagLose => _tagLose;
+    public string TagWin => _tagWin;
 
     [Header("POOLING")]
+    [Tooltip("Position, relative to the camera, for the controlled block to appear at.")]
     [SerializeField] private Vector2 _spawnPos;
     [Tooltip("Amount to have pre-initialized in the standby pool, of each block type.")]
     [SerializeField][Range(1, 20)] private int _initialAmountEach;
 
-    public IReadOnlyList<BlockData> AllBlocks => _allBlocks;
     public Vector2 SpawnPos => _spawnPos;
     public int InitialAmountEach => _initialAmountEach;
 }

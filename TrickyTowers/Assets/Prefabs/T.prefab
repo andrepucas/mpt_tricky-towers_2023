@@ -283,7 +283,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 6
   _rb: {fileID: 7654462285369156733}
-  _staticRadius: 0.1
   _colliders:
   - {fileID: 3579153476129261766}
   - {fileID: 2730324901394233288}
+  _blocksData: {fileID: 11400000, guid: ae02d56b61310724185b0c3f380e0279, type: 2}

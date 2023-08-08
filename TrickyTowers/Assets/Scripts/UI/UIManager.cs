@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -5,9 +7,13 @@ using UnityEngine;
 /// </summary>
 public class UIManager : MonoBehaviour
 {
+    // E V E N T S
+
+    public static event Action OnSetupComplete;
+
     // V A R I A B L E S
 
-    [SerializeField] private GameDataSO _data;
+    [SerializeField] private UserInterfaceDataSO _uiData;
     [SerializeField] private GameObject _fpsCounter;
 
     [Header("PANELS")]
@@ -29,29 +35,40 @@ public class UIManager : MonoBehaviour
             case GameState.SETUP:
 
                 Debug.Log("SETUP");
-                _fpsCounter.SetActive(_data.DisplayFPS);
+
+                _fpsCounter.SetActive(_uiData.DisplayFPS);
                 CloseAllPanels();
+                StartCoroutine(SetupDelay());
                 break;
 
             case GameState.MAIN_MENU:
 
                 Debug.Log("MAIN MENU");
-                _panelMainMenu.Open(_data.PanelFade);
+
+                _panelMainMenu.Open(_uiData.PanelFade);
                 break;
 
             case GameState.PRE_START:
 
                 Debug.Log("PRE-START");
-                _panelMainMenu.Close(_data.PanelFade);
-                _panelPreStart.Open(_data.PanelFade);
+
+                _panelMainMenu.Close(_uiData.PanelFade);
+                _panelPreStart.Open(_uiData.PanelFade);
                 break;
 
             case GameState.GAMEPLAY:
 
                 Debug.Log("GAMEPLAY");
-                
-                _panelPreStart.Close(_data.PanelFade);
-                _panelGameplay.Open(_data.PanelFade);
+
+                _panelPreStart.Close(_uiData.PanelFade);
+                _panelGameplay.Open(_uiData.PanelFade);
+                break;
+
+            case GameState.END_LOSE:
+
+                Debug.Log("END LOSE");
+
+                _panelGameplay.Close(_uiData.PanelFade);
                 break;
 
         }
@@ -62,5 +79,13 @@ public class UIManager : MonoBehaviour
         _panelMainMenu.Close();
         _panelPreStart.Close();
         _panelGameplay.Close();
+    }
+
+    // C O R O U T I N E S
+
+    private IEnumerator SetupDelay()
+    {
+        yield return new WaitForSeconds(_uiData.SetupDelay);
+        OnSetupComplete?.Invoke();
     }
 }
