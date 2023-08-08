@@ -14,7 +14,10 @@ public class Controller : MonoBehaviour
     // V A R I A B L E S
 
     [SerializeField] private BlockPoolSpawner _blockPool;
-    [SerializeField] private GuideBeam _guideBeam; 
+    [SerializeField] private GuideBeam _guideBeam;
+    [SerializeField] private GameObject _levelObjs;
+
+    [Header("DATA")]
     [SerializeField] private GameDataSO _data;
 
     private GameState _currentState;
@@ -39,13 +42,15 @@ public class Controller : MonoBehaviour
 
     private void OnEnable()
     {
-        UIPanelMainMenu.OnPlayButtons += Play;
+        UIPanelMainMenu.OnPlayButtons += PreStart;
+        UIPanelPreStart.OnCountdownEnd += Play;
         Block.Placed += GetNewBlock;
     }
 
     private void OnDisable()
     {
-        UIPanelMainMenu.OnPlayButtons -= Play;
+        UIPanelMainMenu.OnPlayButtons -= PreStart;
+        UIPanelPreStart.OnCountdownEnd -= Play;
         Block.Placed -= GetNewBlock;
     }
 
@@ -146,6 +151,7 @@ public class Controller : MonoBehaviour
                 _inputWidth = Screen.width / _data.WidthUnits;
                 _inputHeight = Screen.height / _data.HeightUnits;
 
+                _levelObjs.SetActive(false);
                 _blockPool.Initialize();
                 _guideBeam.Initialize();
 
@@ -156,8 +162,10 @@ public class Controller : MonoBehaviour
 
                 break;
 
-            // case GameState.PRE_START:
-            //     break;
+            case GameState.PRE_START:
+
+                _levelObjs.SetActive(true);
+                break;
 
             case GameState.GAMEPLAY:
 
@@ -168,9 +176,14 @@ public class Controller : MonoBehaviour
         OnNewGameState?.Invoke(_currentState);
     }
 
-    private void Play(bool p_versusMode)
+    private void PreStart(bool p_versusMode)
     {
         //_inVersusMode = p_versusMode;
+        UpdateGameState(GameState.PRE_START);
+    }
+
+    private void Play()
+    {
         UpdateGameState(GameState.GAMEPLAY);
     }
 

@@ -15,6 +15,15 @@ MonoBehaviour:
   _displayFPS: 1
   _setupDelay: 0.5
   _panelFade: 0.5
+  _displayCountdown: 1
+  _countdownStrings:
+  - 3
+  - 2
+  - 1
+  - GO
+  _countdownDelay: 1
+  _countdownAnimTime: 0.5
+  _countdownSize: 300
   _widthUnits: 18
   _heightUnits: 40
   _rotateDirection: -1
