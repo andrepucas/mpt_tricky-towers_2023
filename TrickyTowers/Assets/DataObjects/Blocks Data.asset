@@ -15,17 +15,66 @@ MonoBehaviour:
   _allBlocks:
   - _type: 1
     _prefab: {fileID: 2486293275492623537, guid: 4c99732b39ab41f49bfc53f7d5e6782b, type: 3}
+    _color: {r: 0.45490196, g: 0.78431374, b: 0.8509804, a: 0.19607843}
+    _widthLoop: 04000000010000000400000001000000
+    _offsetLoop:
+    - 0
+    - 0.5
+    - 0
+    - 0.5
   - _type: 2
     _prefab: {fileID: 2360784165320207239, guid: 7aa6708697d6eae479b810736c119e95, type: 3}
+    _color: {r: 0.23529412, g: 0.34117648, b: 0.6392157, a: 0.19607843}
+    _widthLoop: 03000000020000000300000002000000
+    _offsetLoop:
+    - 0
+    - 0.5
+    - 0
+    - 0.5
   - _type: 3
     _prefab: {fileID: 6303831655214834184, guid: ce601dbf02191644d80aac0830d6d2d9, type: 3}
+    _color: {r: 0.94509804, g: 0.5411765, b: 0.27450982, a: 0.19607843}
+    _widthLoop: 03000000020000000300000002000000
+    _offsetLoop:
+    - 0
+    - 0.5
+    - 0
+    - 0.5
   - _type: 4
     _prefab: {fileID: 5695804657445213946, guid: ed749572889a68a42afd1ab3a7b8fc78, type: 3}
+    _color: {r: 0.96862745, g: 0.9019608, b: 0.22352941, a: 0.19607843}
+    _widthLoop: 02000000020000000200000002000000
+    _offsetLoop:
+    - 0
+    - 0
+    - 0
+    - 0
   - _type: 5
     _prefab: {fileID: 4434818822346734167, guid: 421745142736eb041aa98740f90a8470, type: 3}
+    _color: {r: 0.4627451, g: 0.7176471, b: 0.16470589, a: 0.19607843}
+    _widthLoop: 03000000020000000300000002000000
+    _offsetLoop:
+    - 0
+    - 0.5
+    - 0
+    - 0.5
   - _type: 6
     _prefab: {fileID: 6850233370837709604, guid: 06fd440d17c2ddb4bb36e93f9881fbbf, type: 3}
+    _color: {r: 0.49803922, g: 0.32941177, b: 0.61960787, a: 0.19607843}
+    _widthLoop: 03000000020000000300000002000000
+    _offsetLoop:
+    - 0
+    - 0.5
+    - 0
+    - 0.5
   - _type: 7
     _prefab: {fileID: 1437337931027305632, guid: 3f789bdac95018d429a3a7d6da4ff89e, type: 3}
+    _color: {r: 0.9137255, g: 0.26666668, b: 0.27450982, a: 0.19607843}
+    _widthLoop: 03000000020000000300000002000000
+    _offsetLoop:
+    - 0
+    - 0.5
+    - 0
+    - 0.5
   _spawnPos: {x: 0, y: 16}
   _initialAmountEach: 5

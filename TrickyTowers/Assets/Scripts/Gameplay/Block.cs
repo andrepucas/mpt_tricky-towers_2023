@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -14,9 +13,11 @@ public class Block : MonoBehaviour
     // V A R I A B L E S
 
     [SerializeField] private BlockType _type;
+
+    [Header("COLLISIONS")]
     [SerializeField] private Rigidbody2D _rb;
-    [SerializeField] private BoxCollider2D[] _colliders;
     [SerializeField] private float _staticRadius;
+    [SerializeField] private BoxCollider2D[] _colliders;
 
     public BlockType Type => _type;
     private bool _isControlled;

@@ -14,10 +14,11 @@ public class Controller : MonoBehaviour
     // V A R I A B L E S
 
     [SerializeField] private BlockPoolSpawner _blockPool;
+    [SerializeField] private GuideBeam _guideBeam; 
     [SerializeField] private GameDataSO _data;
 
     private GameState _currentState;
-    [SerializeField]private Block _currentBlock;
+    private Block _currentBlock;
 
     // Input control.
     private Vector3 _inputPressPos;
@@ -100,6 +101,7 @@ public class Controller : MonoBehaviour
             {
                 // Rotate block.
                 _currentBlock.transform.Rotate(0, 0, 90 * _data.RotateDir);
+                _guideBeam.CounterRotation(-_data.RotateDir);
             }
 
             // If was being dragged to the side.
@@ -141,10 +143,11 @@ public class Controller : MonoBehaviour
         {
             case GameState.SETUP:
 
-                //_currentBlock.Control(true);
-                _blockPool.Initialize();
                 _inputWidth = Screen.width / _data.WidthUnits;
                 _inputHeight = Screen.height / _data.HeightUnits;
+
+                _blockPool.Initialize();
+                _guideBeam.Initialize();
 
                 StartCoroutine(SetupDelay());
                 break;
@@ -175,9 +178,10 @@ public class Controller : MonoBehaviour
     {
         _currentBlock = null;
         _inputPressedThisBlock = false;
-
+        
         _currentBlock = _blockPool.GetBlock();
         _currentBlock.Control(true);
+        _guideBeam.Follow(_currentBlock);
     }
 
     // C O R O U T I N E S
