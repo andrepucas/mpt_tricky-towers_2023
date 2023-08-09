@@ -1,8 +1,14 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BlockPoolSpawner : MonoBehaviour
 {
+    // E V E N T S
+
+    public static event Action<Sprite, Color> OnNextBlockPicked;
+
     // V A R I A B L E S
 
     [SerializeField] private Transform _activeBlocksFolder;
@@ -59,11 +65,9 @@ public class BlockPoolSpawner : MonoBehaviour
 
     public Block GetBlock()
     {
-        // Pick random block, different from last.
-        do {_newBlockType = _allTypes[Random.Range(0, _allTypes.Count)];}
-        while (_newBlockType == _lastBlockType);
-
-        _lastBlockType = _newBlockType;
+        // If new block hasn't been pre-picked yet.
+        if (_newBlockType == BlockType.NONE)
+            _newBlockType = _allTypes[Random.Range(0, _allTypes.Count)];
 
         // If pool has this type of block, get it. 
         if (_standbyPool[_newBlockType].Count > 0)
@@ -74,6 +78,7 @@ public class BlockPoolSpawner : MonoBehaviour
 
         // Place it at the spawners position, in a static parent, and enable it.
         _block.transform.localPosition = Vector3.zero;
+        _block.transform.rotation = Quaternion.identity;
         _block.transform.SetParent(_activeBlocksFolder);
         _block.gameObject.SetActive(true);
 
@@ -81,7 +86,20 @@ public class BlockPoolSpawner : MonoBehaviour
         _standbyPool[_newBlockType].Remove(_block);
         _activePool.Add(_block);
 
+        _lastBlockType = _newBlockType;
+        PickNextBlock();
+
         return _block;
+    }
+
+    private void PickNextBlock()
+    {
+        // Pick random block, different from last.
+        do {_newBlockType = _allTypes[Random.Range(0, _allTypes.Count)];}
+        while (_newBlockType == _lastBlockType);
+
+        OnNextBlockPicked?.Invoke(_blocksData.SpriteOf[_newBlockType], 
+            _blocksData.ColorOf[_newBlockType]);
     }
 
     private Block CreateBlock(BlockType p_type)

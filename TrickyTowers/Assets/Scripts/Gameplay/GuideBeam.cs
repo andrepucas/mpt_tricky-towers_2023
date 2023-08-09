@@ -11,10 +11,6 @@ public class GuideBeam : MonoBehaviour
     [SerializeField] private SpriteRenderer _renderer;
     [SerializeField] private BlocksDataSO _blocksData;
 
-    private Dictionary<BlockType, Color> _blockColors;
-    private Dictionary<BlockType, List<int>> _blockWidths;
-    private Dictionary<BlockType, List<float>> _blockOffsets;
-
     private Transform _parent;
     private BlockType _currentType;
     private Vector2 _auxSize;
@@ -30,17 +26,6 @@ public class GuideBeam : MonoBehaviour
 
         _auxSize = new Vector2(0, 200);
         _auxPos = Vector2.zero;
-
-        _blockColors = new Dictionary<BlockType, Color>();
-        _blockWidths = new Dictionary<BlockType, List<int>>();
-        _blockOffsets = new Dictionary<BlockType, List<float>>();
-
-        foreach (BlockData _blockData in _blocksData.AllBlocks)
-        {
-            _blockColors.Add(_blockData.Type, _blockData.Color);
-            _blockWidths.Add(_blockData.Type, _blockData.WidthLoop);
-            _blockOffsets.Add(_blockData.Type, _blockData.OffsetLoop);
-        }
     }
 
     public void Follow(Block p_block)
@@ -69,14 +54,14 @@ public class GuideBeam : MonoBehaviour
     private void AdaptToBlock()
     {
         // Color.
-        _renderer.color = _blockColors[_currentType];
+        // _renderer.color = _blocksData.ColorOf[_currentType];
 
         // Width.
-        _auxSize.x = _blockWidths[_currentType][_rotationIndex];
+        _auxSize.x = _blocksData.WidthOf[_currentType][_rotationIndex];
         _renderer.size = _auxSize;
 
         // Offset.
-        _auxPos.y = _blockOffsets[_currentType][_rotationIndex];
+        _auxPos.y = _blocksData.OffsetOf[_currentType][_rotationIndex];
         transform.localPosition = _auxPos;
     }
 

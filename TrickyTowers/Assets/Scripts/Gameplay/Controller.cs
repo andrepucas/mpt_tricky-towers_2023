@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -15,10 +14,11 @@ public class Controller : MonoBehaviour
 
     [SerializeField] private BlockPoolSpawner _blockPool;
     [SerializeField] private GuideBeam _guideBeam;
-    [SerializeField] private GameObject _levelObjs;
+    [SerializeField] private GameObject _gameplayObjs;
 
     [Header("DATA")]
     [SerializeField] private GameDataSO _data;
+    [SerializeField] private BlocksDataSO _blocksData;
 
     private GameState _currentState;
     private Block _currentBlock;
@@ -158,7 +158,8 @@ public class Controller : MonoBehaviour
                 _inputWidth = Screen.width / _data.WidthUnits;
                 _inputHeight = Screen.height / _data.HeightUnits;
 
-                _levelObjs.SetActive(false);
+                _gameplayObjs.SetActive(false);
+                _blocksData.InitializeDictionaries();
                 _blockPool.Initialize();
                 _guideBeam.Initialize();
                 break;
@@ -168,7 +169,7 @@ public class Controller : MonoBehaviour
 
             case GameState.PRE_START:
 
-                _levelObjs.SetActive(true);
+                _gameplayObjs.SetActive(true);
                 if (_data.InfiniteLives) _currentLives = -1;
                 else _currentLives = _data.NumberOfLives;
 

@@ -29,6 +29,34 @@ public class BlocksDataSO : ScriptableObject
 
     public Vector2 SpawnPos => _spawnPos;
     public int InitialAmountEach => _initialAmountEach;
+
+    // D I C T I O N A R I E S
+
+    private Dictionary<BlockType, Color> _blockColors;
+    private Dictionary<BlockType, Sprite> _blockSprites;
+    private Dictionary<BlockType, List<int>> _blockWidths;
+    private Dictionary<BlockType, List<float>> _blockOffsets;
+
+    public IReadOnlyDictionary<BlockType, Color> ColorOf => _blockColors;
+    public IReadOnlyDictionary<BlockType, Sprite> SpriteOf => _blockSprites;
+    public IReadOnlyDictionary<BlockType, List<int>> WidthOf => _blockWidths;
+    public IReadOnlyDictionary<BlockType, List<float>> OffsetOf => _blockOffsets;
+
+    public void InitializeDictionaries()
+    {
+        _blockColors = new Dictionary<BlockType, Color>();
+        _blockSprites = new Dictionary<BlockType, Sprite>();
+        _blockWidths = new Dictionary<BlockType, List<int>>();
+        _blockOffsets = new Dictionary<BlockType, List<float>>();
+
+        foreach (BlockData _blockData in AllBlocks)
+        {
+            _blockColors.Add(_blockData.Type, _blockData.Color);
+            _blockSprites.Add(_blockData.Type, _blockData.Sprite);
+            _blockWidths.Add(_blockData.Type, _blockData.WidthLoop);
+            _blockOffsets.Add(_blockData.Type, _blockData.OffsetLoop);
+        }
+    }
 }
 
 [System.Serializable]
@@ -37,6 +65,7 @@ public struct BlockData
     [SerializeField] private BlockType _type;
     [SerializeField] private GameObject _prefab;
     [SerializeField] private Color _color;
+    [SerializeField] private Sprite _sprite;
     [Tooltip("Block width every time it rotates.")]
     [SerializeField][Range(1, 4)] private List<int> _widthLoop;
     [Tooltip("Block offset every time it rotates.")]
@@ -45,6 +74,7 @@ public struct BlockData
     public readonly BlockType Type => _type;
     public readonly GameObject Prefab => _prefab;
     public readonly Color Color => _color;
+    public readonly Sprite Sprite => _sprite;
     public readonly List<int> WidthLoop => _widthLoop;
     public readonly List<float> OffsetLoop => _offsetLoop;
 }

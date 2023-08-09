@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Game Data
   m_EditorClassIdentifier: 
   _numberOfLives: 3
-  _infiniteLives: 0
+  _infiniteLives: 1
   _widthUnits: 18
   _heightUnits: 40
   _rotateDirection: -1

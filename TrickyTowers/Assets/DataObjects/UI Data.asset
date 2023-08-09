@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _displayFPS: 1
   _setupDelay: 0.5
-  _panelFade: 0.5
+  _panelFade: 0.2
   _displayCountdown: 1
   _countdownStrings:
   - 3
@@ -23,4 +23,4 @@ MonoBehaviour:
   - GO!
   _countdownDelay: 1
   _countdownAnimTime: 0.5
-  _countdownSize: 300
+  _countdownSize: 200
