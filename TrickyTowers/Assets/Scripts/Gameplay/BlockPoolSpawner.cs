@@ -63,6 +63,14 @@ public class BlockPoolSpawner : MonoBehaviour
         }
     }
 
+    public void PoolAllActive()
+    {
+        List<Block> m_tempList = new(_activePool);
+        
+        foreach (Block f_block in m_tempList)
+            SetStandby(f_block);
+    }
+
     public Block GetBlock()
     {
         // If new block hasn't been pre-picked yet.

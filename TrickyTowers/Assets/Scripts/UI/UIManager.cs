@@ -20,6 +20,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private UIPanelMainMenu _panelMainMenu;
     [SerializeField] private UIPanelPreStart _panelPreStart;
     [SerializeField] private UIPanelGameplay _panelGameplay;
+    [SerializeField] private UIPanelPause _panelPause;
+    [SerializeField] private UIPanelEnd _panelEnd;
 
     // G A M E   O B J E C T
 
@@ -45,14 +47,30 @@ public class UIManager : MonoBehaviour
 
                 Debug.Log("MAIN MENU");
 
-                _panelMainMenu.Open(_uiData.PanelFade);
+                if (_panelPause.IsOpen)
+                {
+                    _panelPause.Close();
+                    _panelGameplay.Close();
+                }
+
+                else if (_panelEnd.IsOpen) _panelEnd.Close();
+
+                _panelMainMenu.Open(_uiData.RevealFade);
                 break;
 
             case GameState.PRE_START:
 
                 Debug.Log("PRE-START");
 
-                _panelMainMenu.Close(_uiData.PanelFade);
+                if (_panelPause.IsOpen)
+                {
+                    _panelPause.Close();
+                    _panelGameplay.Close();
+                }
+
+                else if (_panelEnd.IsOpen) _panelEnd.Close();
+                else _panelMainMenu.Close();
+
                 _panelPreStart.Open(_uiData.PanelFade);
                 break;
 
@@ -60,8 +78,17 @@ public class UIManager : MonoBehaviour
 
                 Debug.Log("GAMEPLAY");
 
-                _panelPreStart.Close(_uiData.PanelFade);
+                if (_panelPause.IsOpen) _panelPause.Close();
+                else _panelPreStart.Close(_uiData.PanelFade);
+
                 _panelGameplay.Open(_uiData.PanelFade);
+                break;
+
+            case GameState.PAUSE:
+
+                Debug.Log("PAUSE");
+
+                _panelPause.Open(_uiData.PanelFade);
                 break;
 
             case GameState.END_LOSE:
@@ -69,6 +96,7 @@ public class UIManager : MonoBehaviour
                 Debug.Log("END LOSE");
 
                 _panelGameplay.Close(_uiData.PanelFade);
+                _panelEnd.OpenLose(_uiData.PanelFade);
                 break;
 
         }
@@ -79,6 +107,8 @@ public class UIManager : MonoBehaviour
         _panelMainMenu.Close();
         _panelPreStart.Close();
         _panelGameplay.Close();
+        _panelPause.Close();
+        _panelEnd.Close();
     }
 
     // C O R O U T I N E S

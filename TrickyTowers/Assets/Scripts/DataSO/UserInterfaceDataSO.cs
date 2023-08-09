@@ -15,10 +15,13 @@ public class UserInterfaceDataSO : ScriptableObject
     [Header("GENERAL")]
     [Tooltip("Time (s) to wait before revealing main menu. 0 might lead to laggy opening animation.")]
     [SerializeField][Range(0, 2)] private float _setupDelay;
+    [Tooltip("Transition time for main menu UI panel to open.")]
+    [SerializeField][Range(0.5f, 5)] private float _revealFade;
     [Tooltip("Transition time (s) for UI panels to open or close.")]
     [SerializeField][Range(0, 2)] private float _panelFade;
 
     public float SetupDelay => _setupDelay;
+    public float RevealFade => _revealFade;
     public float PanelFade => _panelFade;
 
     [Header("PRE-START")]
@@ -37,4 +40,19 @@ public class UserInterfaceDataSO : ScriptableObject
     public float CountdownDelay => _countdownDelay;
     public float CountdownAnimTime => _countdownAnimTime;
     public float CountdownSize => _countdownSize;
+
+    [Header("GAMEPLAY")]
+    [SerializeField] private bool _animateLivesLost = true;
+    [SerializeField] private float _livesColorLerpTime;
+
+    public bool AnimateLivesLost => _animateLivesLost;
+    public float LivesColorLerpTime => _livesColorLerpTime;
+
+    [Header("GAME OVER")]
+    [SerializeField] private Sprite _endSpriteWin;
+    [SerializeField] private Sprite _endSpriteLose;
+
+    public Sprite EndSpriteWin => _endSpriteWin;
+    public Sprite EndSpriteLose => _endSpriteLose;
+
 }

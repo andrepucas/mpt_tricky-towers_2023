@@ -9,6 +9,7 @@ public class Controller : MonoBehaviour
     // E V E N T S
 
     public static event Action<GameState> OnNewGameState;
+    public static event Action<int> OnLivesUpdated;
 
     // V A R I A B L E S
 
@@ -23,6 +24,7 @@ public class Controller : MonoBehaviour
     private GameState _currentState;
     private Block _currentBlock;
     private int _currentLives;
+    private bool _inVersusMode;
 
     // Input control.
     private Vector3 _inputPressPos;
@@ -39,26 +41,38 @@ public class Controller : MonoBehaviour
 
     // G A M E   O B J E C T
 
-    private void Awake()
-    {
-        UpdateGameState(GameState.SETUP);
-        UIManager.OnSetupComplete += () => UpdateGameState(GameState.MAIN_MENU);
-    }
+    private void Awake() => UpdateGameState(GameState.SETUP);
 
     private void OnEnable()
     {
-        UIPanelMainMenu.OnPlayButtons += PreStart;
-        UIPanelPreStart.OnCountdownEnd += Play;
         Block.OnPlaced += GetNewBlock;
         Block.OnOutOfBounds += HandleBlockLost;
+
+        UIManager.OnSetupComplete += ToMenu;
+        UIPanelMainMenu.OnPlayButtons += GameModePicked;
+        UIPanelPreStart.OnCountdownEnd += Play;
+        UIPanelGameplay.OnPauseButton += Pause;
+        UIPanelPause.OnResumeButton += ToGameplay;
+        UIPanelPause.OnRetryButton += StopAndRestart;
+        UIPanelPause.OnQuitButton += StopAndQuit;
+        UIPanelEnd.OnQuitButton += ToMenu;
+        UIPanelEnd.OnRetryButton += ToPreStart;
     }
 
     private void OnDisable()
     {
-        UIPanelMainMenu.OnPlayButtons -= PreStart;
-        UIPanelPreStart.OnCountdownEnd -= Play;
         Block.OnPlaced -= GetNewBlock;
         Block.OnOutOfBounds -= HandleBlockLost;
+        
+        UIManager.OnSetupComplete -= ToMenu;
+        UIPanelMainMenu.OnPlayButtons -= GameModePicked;
+        UIPanelPreStart.OnCountdownEnd -= Play;
+        UIPanelGameplay.OnPauseButton -= Pause;
+        UIPanelPause.OnResumeButton -= ToGameplay;
+        UIPanelPause.OnRetryButton -= StopAndRestart;
+        UIPanelPause.OnQuitButton -= StopAndQuit;
+        UIPanelEnd.OnQuitButton -= ToMenu;
+        UIPanelEnd.OnRetryButton -= ToPreStart;
     }
 
     private void Update()
@@ -158,50 +172,52 @@ public class Controller : MonoBehaviour
                 _inputWidth = Screen.width / _data.WidthUnits;
                 _inputHeight = Screen.height / _data.HeightUnits;
 
-                _gameplayObjs.SetActive(false);
                 _blocksData.InitializeDictionaries();
                 _blockPool.Initialize();
                 _guideBeam.Initialize();
                 break;
 
             case GameState.MAIN_MENU:
+
+                Time.timeScale = 1;
+                _gameplayObjs.SetActive(false);
                 break;
 
             case GameState.PRE_START:
 
+                Time.timeScale = 1;
+                _blockPool.PoolAllActive();
                 _gameplayObjs.SetActive(true);
+
                 if (_data.InfiniteLives) _currentLives = -1;
                 else _currentLives = _data.NumberOfLives;
-
+                OnLivesUpdated?.Invoke(_currentLives);
                 break;
 
             case GameState.GAMEPLAY:
+
+                Time.timeScale = 1;
                 break;
 
             case GameState.PAUSE:
+
+                Time.timeScale = 0;
                 break;
 
             case GameState.END_LOSE:
 
-                _currentBlock.Control(false);
-                _currentBlock = null;
-                _guideBeam.Stop();
+                StopGame();
                 break;
         }
 
         OnNewGameState?.Invoke(_currentState);
     }
 
-    private void PreStart(bool p_versusMode)
+    private void StopGame()
     {
-        //_inVersusMode = p_versusMode;
-        UpdateGameState(GameState.PRE_START);
-    }
-
-    private void Play()
-    {
-        GetNewBlock();
-        UpdateGameState(GameState.GAMEPLAY);
+        _currentBlock.Control(false);
+        _currentBlock = null;
+        _guideBeam.Stop();
     }
 
     private void GetNewBlock()
@@ -217,6 +233,7 @@ public class Controller : MonoBehaviour
     private void HandleBlockLost(Block p_block)
     {
         _currentLives--;
+        OnLivesUpdated?.Invoke(_currentLives);
 
         // If no more lives. End game.
         if (_currentLives == 0) UpdateGameState(GameState.END_LOSE);
@@ -226,4 +243,38 @@ public class Controller : MonoBehaviour
 
         _blockPool.SetStandby(p_block);
     }
+
+    private void GameModePicked(bool p_versusMode)
+    {
+        _inVersusMode = p_versusMode;
+        UpdateGameState(GameState.PRE_START);
+    }
+
+    private void Play()
+    {
+        GetNewBlock();
+        UpdateGameState(GameState.GAMEPLAY);
+    }
+
+    private void Pause()
+    {
+        _inputPressedThisBlock = false;
+        UpdateGameState(GameState.PAUSE);
+    }
+
+    private void StopAndRestart()
+    {
+        StopGame();
+        UpdateGameState(GameState.PRE_START);
+    }
+
+    private void StopAndQuit()
+    {
+        StopGame();
+        UpdateGameState(GameState.MAIN_MENU);
+    }
+
+    private void ToMenu() => UpdateGameState(GameState.MAIN_MENU);
+    private void ToPreStart() => UpdateGameState(GameState.PRE_START);
+    private void ToGameplay() => UpdateGameState(GameState.GAMEPLAY);
 }

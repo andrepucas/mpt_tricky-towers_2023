@@ -43,5 +43,5 @@ public class GameDataSO : ScriptableObject
     public float DragSideSnap => _dragSideSnap;
     public float SwipeMaxTime => _swipeMaxTime;
     public float SwipeMinUnits => _swipeMinUnits;
-    public float SwipeSnap => _swipeSnap; 
+    public float SwipeSnap => _swipeSnap;
 }

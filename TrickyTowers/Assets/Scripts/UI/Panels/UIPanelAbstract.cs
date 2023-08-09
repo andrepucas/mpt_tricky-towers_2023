@@ -11,12 +11,16 @@ public abstract class UIPanelAbstract : MonoBehaviour
     [Tooltip("Canvas group of this panel.")]
     [SerializeField] private CanvasGroup _canvasGroup;
 
+    public bool IsOpen {get; private set;}
+
     private float _elapsedTime;
 
     // M E T H O D S
 
     protected void Open(float p_transition)
     {
+        IsOpen = true;
+        
         StopAllCoroutines();
 
         // If transition time is 0.
@@ -34,6 +38,8 @@ public abstract class UIPanelAbstract : MonoBehaviour
 
     protected void Close(float p_transition)
     {
+        IsOpen = false;
+
         StopAllCoroutines();
 
         // Stops blocking raycasts right away.

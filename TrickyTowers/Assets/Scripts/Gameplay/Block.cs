@@ -26,13 +26,15 @@ public class Block : MonoBehaviour
 
     public BlockType Type => _type;
     private bool _isControlled;
+    private bool _isOutOfBounds;
 
     // G A M E   O B J E C T
 
     private void OnCollisionEnter2D(Collision2D p_other)
     {
-        if (p_other.gameObject.tag == _blocksData.TagLose)
+        if (p_other.gameObject.tag == _blocksData.TagLose && !_isOutOfBounds)
         {
+            _isOutOfBounds = true;
             Control(false);
             OnOutOfBounds?.Invoke(this);
         }
@@ -56,6 +58,7 @@ public class Block : MonoBehaviour
                 f_collider.edgeRadius = _blocksData.ControlledBlockRadius;
 
             _rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            _isOutOfBounds = false;
         }
 
         else
