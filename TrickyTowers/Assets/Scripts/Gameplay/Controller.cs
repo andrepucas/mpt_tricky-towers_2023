@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Handles input and game state updates.
+/// Controls game state updates, input, and camera.
 /// </summary>
 public class Controller : MonoBehaviour
 {
@@ -21,10 +23,18 @@ public class Controller : MonoBehaviour
     [SerializeField] private GameDataSO _data;
     [SerializeField] private BlocksDataSO _blocksData;
 
+    // Game session control.
     private GameState _currentState;
     private Block _currentBlock;
     private int _currentLives;
     private bool _inVersusMode;
+
+    // Follow tower height control.
+    private bool _isFollowingTower;
+    private List<Transform> _towerTransforms;
+    private Vector3 _finishPos;
+    private float _elapsedTime;
+    private float _targetHeight;
 
     // Input control.
     private Vector3 _inputPressPos;
@@ -77,6 +87,34 @@ public class Controller : MonoBehaviour
 
     private void Update()
     {
+        // Camera tracking tallest block.
+        if (_isFollowingTower)
+        {
+            if (_elapsedTime > _data.CamFollowDelay)
+            {
+                _elapsedTime = 0;
+                _targetHeight = 0;
+
+                for (int i = 0; i < _towerTransforms.Count; i++)
+                {
+                    if (_towerTransforms[i].position.y > _targetHeight)
+                        _targetHeight = _towerTransforms[i].position.y;
+                }
+            }
+
+            if (_targetHeight > 0 && (_targetHeight != transform.position.y))
+            {
+                Debug.Log(1);
+                
+                transform.position = Vector3.MoveTowards(transform.position, 
+                    Vector3.up * _targetHeight, 
+                    Time.deltaTime * _data.CamFollowSpeed);
+            }
+
+            _elapsedTime += Time.deltaTime;
+        }
+
+        // Handle inputs.
         if (_currentState != GameState.GAMEPLAY || _currentBlock == null) return;
 
         // Input - On press.
@@ -169,34 +207,55 @@ public class Controller : MonoBehaviour
         {
             case GameState.SETUP:
 
+                // Calculate input distances based on screen resolution.
                 _inputWidth = Screen.width / _data.WidthUnits;
                 _inputHeight = Screen.height / _data.HeightUnits;
 
+                // Initialize gameplay elements and data.
+                _towerTransforms = new List<Transform>();
+                _finishPos = Vector3.up * _data.FinishHeight;
+                _gameplayObjs.SetActive(false);
                 _blocksData.InitializeDictionaries();
                 _blockPool.Initialize();
                 _guideBeam.Initialize();
+
+                transform.position = _finishPos;
                 break;
 
             case GameState.MAIN_MENU:
 
                 Time.timeScale = 1;
+
+                // Reset controller position and hide game elements.
+                _isFollowingTower = false;
+                _targetHeight = 0;
+                transform.position = _finishPos;
                 _gameplayObjs.SetActive(false);
                 break;
 
             case GameState.PRE_START:
 
                 Time.timeScale = 1;
+
+                // Reset gameplay related data.
+                _isFollowingTower = false;
+                _targetHeight = 0;
+                _towerTransforms.Clear();
+                StartCoroutine(PanDownFromFinish());
+
                 _blockPool.PoolAllActive();
                 _gameplayObjs.SetActive(true);
 
                 if (_data.InfiniteLives) _currentLives = -1;
                 else _currentLives = _data.NumberOfLives;
                 OnLivesUpdated?.Invoke(_currentLives);
+
                 break;
 
             case GameState.GAMEPLAY:
 
                 Time.timeScale = 1;
+                _isFollowingTower = true;
                 break;
 
             case GameState.PAUSE:
@@ -222,8 +281,14 @@ public class Controller : MonoBehaviour
 
     private void GetNewBlock()
     {
-        _currentBlock = null;
-        _inputPressedThisBlock = false;
+        if (_currentBlock != null) 
+            _towerTransforms.Add(_currentBlock.transform);
+        
+        else
+        {
+            _currentBlock = null;
+            _inputPressedThisBlock = false;
+        }
 
         _currentBlock = _blockPool.GetBlock();
         _currentBlock.Control(true);
@@ -242,6 +307,7 @@ public class Controller : MonoBehaviour
         else if (p_block == _currentBlock) GetNewBlock();
 
         _blockPool.SetStandby(p_block);
+        _towerTransforms.Remove(p_block.transform);
     }
 
     private void GameModePicked(bool p_versusMode)
@@ -277,4 +343,23 @@ public class Controller : MonoBehaviour
     private void ToMenu() => UpdateGameState(GameState.MAIN_MENU);
     private void ToPreStart() => UpdateGameState(GameState.PRE_START);
     private void ToGameplay() => UpdateGameState(GameState.GAMEPLAY);
+
+    // C O R O U T I N E S
+
+    private IEnumerator PanDownFromFinish()
+    {
+        transform.position = _finishPos;
+        _elapsedTime = 0;
+
+        while (transform.position.y > 0)
+        {
+            transform.position = Vector3.Lerp(_finishPos, Vector3.zero, 
+                _elapsedTime/_data.CamPreviewTime);
+
+            _elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        _elapsedTime = 0;
+    }
 }

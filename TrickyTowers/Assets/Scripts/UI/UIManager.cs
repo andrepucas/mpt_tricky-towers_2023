@@ -49,11 +49,11 @@ public class UIManager : MonoBehaviour
 
                 if (_panelPause.IsOpen)
                 {
-                    _panelPause.Close();
-                    _panelGameplay.Close();
+                    _panelPause.Close(_uiData.PanelFade);
+                    _panelGameplay.Close(_uiData.PanelFade);
                 }
 
-                else if (_panelEnd.IsOpen) _panelEnd.Close();
+                else if (_panelEnd.IsOpen) _panelEnd.Close(_uiData.PanelFade);
 
                 _panelMainMenu.Open(_uiData.RevealFade);
                 break;
@@ -64,12 +64,12 @@ public class UIManager : MonoBehaviour
 
                 if (_panelPause.IsOpen)
                 {
-                    _panelPause.Close();
-                    _panelGameplay.Close();
+                    _panelPause.Close(_uiData.PanelFade);
+                    _panelGameplay.Close(_uiData.PanelFade);
                 }
 
-                else if (_panelEnd.IsOpen) _panelEnd.Close();
-                else _panelMainMenu.Close();
+                else if (_panelEnd.IsOpen) _panelEnd.Close(_uiData.PanelFade);
+                else _panelMainMenu.Close(_uiData.PanelFade);
 
                 _panelPreStart.Open(_uiData.PanelFade);
                 break;
@@ -78,7 +78,7 @@ public class UIManager : MonoBehaviour
 
                 Debug.Log("GAMEPLAY");
 
-                if (_panelPause.IsOpen) _panelPause.Close();
+                if (_panelPause.IsOpen) _panelPause.Close(_uiData.PanelFade);
                 else _panelPreStart.Close(_uiData.PanelFade);
 
                 _panelGameplay.Open(_uiData.PanelFade);

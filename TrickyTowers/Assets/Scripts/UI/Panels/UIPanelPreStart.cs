@@ -32,9 +32,11 @@ public class UIPanelPreStart : UIPanelAbstract
     private IEnumerator Countdown()
     {
         YieldInstruction m_timerTime = new WaitForSeconds(
-            _uiData.CountdownDelay - _uiData.CountdownAnimTime);
+            _uiData.CountdownCycle - _uiData.CountdownAnimTime);
 
         float m_elapsedTime = 0;
+
+        yield return new WaitForSecondsRealtime(_uiData.CountdownDelay);
 
         for (int i = 0; i < _uiData.CountdownStrings.Count; i++)
         {
@@ -52,7 +54,7 @@ public class UIPanelPreStart : UIPanelAbstract
                 yield return null;
             }
 
-            if (i < _uiData.CountdownStrings.Count - 1) yield return m_timerTime;
+            yield return m_timerTime;
         }
 
         // Raise event when countdown ends.

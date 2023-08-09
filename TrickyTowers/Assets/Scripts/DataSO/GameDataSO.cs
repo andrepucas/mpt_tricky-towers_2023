@@ -8,12 +8,27 @@ public class GameDataSO : ScriptableObject
 {
     [Header("GENERAL")]
     [Tooltip("Number of blocks that can go out of bounds before losing.")]
-    [SerializeField][Range(1, 5)] private int _numberOfLives;
+    [SerializeField][Range(1, 9)] private int _numberOfLives = 5;
     [Tooltip("Enable this to play with infinite lives.")]
     [SerializeField] private bool _infiniteLives;
+    [Tooltip("Height that tower must reach to win.")]
+    [SerializeField][Range(5, 40)] private int _finishHeight = 40;
 
     public int NumberOfLives => _numberOfLives;
     public bool InfiniteLives => _infiniteLives;
+    public int FinishHeight => _finishHeight;
+
+    [Header("CAMERA")]
+    [Tooltip("Time (s) for camera to pan from finish line to start base, at the start.")]
+    [SerializeField][Range(0, 10)] private float _camPreviewTime;
+    [Tooltip("Time (s) for camera to try and update its position, based on tower height.")]
+    [SerializeField][Range(.5f, 5)] private float _camFollowDelay;
+    [Tooltip("Speed ratio at which the camera follows the tower. Closer to 0 => smoother follow.")]
+    [SerializeField][Range(.1f, 2)] private float _camFollowSpeed;
+
+    public float CamPreviewTime => _camPreviewTime;
+    public float CamFollowDelay => _camFollowDelay;
+    public float CamFollowSpeed => _camFollowSpeed;
 
     [Header("BLOCK CONTROL")]
     [Tooltip("Number of units that fit horizontally in the game-area. Default: 18")]

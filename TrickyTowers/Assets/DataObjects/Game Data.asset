@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c40c45869da6ee4cb41b88377c64c2f, type: 3}
   m_Name: Game Data
   m_EditorClassIdentifier: 
-  _numberOfLives: 3
+  _numberOfLives: 5
   _infiniteLives: 0
+  _finishHeight: 40
+  _camPreviewTime: 3
+  _camFollowDelay: 1
+  _camFollowSpeed: 0.5
   _widthUnits: 18
   _heightUnits: 40
   _rotateDirection: -1

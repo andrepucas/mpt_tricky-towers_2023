@@ -14,16 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _displayFPS: 1
   _setupDelay: 0.5
-  _revealFade: 1
-  _panelFade: 0.2
+  _revealFade: 0.5
+  _panelFade: 0.1
   _displayCountdown: 1
   _countdownStrings:
   - 3
   - 2
   - 1
   - GO!
-  _countdownDelay: 1
-  _countdownAnimTime: 0.5
+  _countdownDelay: 2
+  _countdownCycle: 1
+  _countdownAnimTime: 0.25
   _countdownSize: 200
   _animateLivesLost: 1
   _livesColorLerpTime: 0.15

@@ -28,8 +28,10 @@ public class UserInterfaceDataSO : ScriptableObject
     [SerializeField] private bool _displayCountdown = true;
     [Tooltip("Text to be displayed in the countdown. Default: 3, 2, 1, GO!")]
     [SerializeField] private string[] _countdownStrings = {"3", "2", "1", "GO!"};
+    [Tooltip("Time (s) before the countdown starts.")]
+    [SerializeField][Range(0, 10)] private float _countdownDelay = 1;
     [Tooltip("Time (s) it takes to cycle through each strings. Default = 1.")]
-    [SerializeField][Range(0, 3)] private float _countdownDelay = 1;
+    [SerializeField][Range(0, 3)] private float _countdownCycle = 1;
     [Tooltip("Time (s) each string takes to scale up. Default = 0.5s")]
     [SerializeField][Range(0, 3)] private float _countdownAnimTime = 0.5f;
     [Tooltip("Target font size.")]
@@ -38,6 +40,7 @@ public class UserInterfaceDataSO : ScriptableObject
     public bool DisplayCountdown => _displayCountdown;
     public IReadOnlyList<string> CountdownStrings => _countdownStrings;
     public float CountdownDelay => _countdownDelay;
+    public float CountdownCycle => _countdownCycle;
     public float CountdownAnimTime => _countdownAnimTime;
     public float CountdownSize => _countdownSize;
 
