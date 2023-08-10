@@ -14,6 +14,6 @@ public class UIPanelMainMenu : UIPanelAbstract
     public new void Open(float p_fade = 0) => base.Open(p_fade);
     public new void Close(float p_fade = 0) => base.Close(p_fade);
 
-    public void BtnCasual() => OnPlayButtons?.Invoke(false);
+    public void BtnSolo() => OnPlayButtons?.Invoke(false);
     public void BtnVersus() => OnPlayButtons?.Invoke(true);
 }

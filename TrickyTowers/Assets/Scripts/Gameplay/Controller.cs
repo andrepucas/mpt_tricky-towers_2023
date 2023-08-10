@@ -254,6 +254,11 @@ public class Controller : MonoBehaviour
                 else _currentLives = _data.NumberOfLives;
                 OnLivesUpdated?.Invoke(_currentLives);
 
+                if (_inVersusMode)
+                {
+                    // AI SETUP;
+                }
+
                 break;
 
             case GameState.GAMEPLAY:

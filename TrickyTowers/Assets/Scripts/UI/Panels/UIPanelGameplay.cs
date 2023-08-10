@@ -85,7 +85,13 @@ public class UIPanelGameplay : UIPanelAbstract
     private void ToggleFinishCounter(bool p_toggle)
     {
         if (p_toggle) _countdown = StartCoroutine(CountdownToFinish());
-        else StopCoroutine(_countdown);
+
+        else
+        {
+            StopCoroutine(_countdown);
+            _countdownTxt.text = "";
+            _countdownTxt.fontSize = 0;
+        }
     }
 
     public void BtnPause() => OnPauseButton?.Invoke();
@@ -142,7 +148,7 @@ public class UIPanelGameplay : UIPanelAbstract
                 _countdownTxt.fontSize = Mathf.Lerp(
                     0, _uiData.EndCountSize, m_elapsedTime / _uiData.EndCountAnimTime);
 
-                m_elapsedTime += Time.unscaledDeltaTime;
+                m_elapsedTime += Time.deltaTime;
                 yield return null;
             }
 
