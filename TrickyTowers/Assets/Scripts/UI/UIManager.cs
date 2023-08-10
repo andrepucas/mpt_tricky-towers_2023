@@ -36,16 +36,12 @@ public class UIManager : MonoBehaviour
         {
             case GameState.SETUP:
 
-                Debug.Log("SETUP");
-
                 _fpsCounter.SetActive(_uiData.DisplayFPS);
                 CloseAllPanels();
                 StartCoroutine(SetupDelay());
                 break;
 
             case GameState.MAIN_MENU:
-
-                Debug.Log("MAIN MENU");
 
                 if (_panelPause.IsOpen)
                 {
@@ -59,8 +55,6 @@ public class UIManager : MonoBehaviour
                 break;
 
             case GameState.PRE_START:
-
-                Debug.Log("PRE-START");
 
                 if (_panelPause.IsOpen)
                 {
@@ -76,8 +70,6 @@ public class UIManager : MonoBehaviour
 
             case GameState.GAMEPLAY:
 
-                Debug.Log("GAMEPLAY");
-
                 if (_panelPause.IsOpen) _panelPause.Close(_uiData.PanelFade);
                 else _panelPreStart.Close(_uiData.PanelFade);
 
@@ -86,17 +78,19 @@ public class UIManager : MonoBehaviour
 
             case GameState.PAUSE:
 
-                Debug.Log("PAUSE");
-
                 _panelPause.Open(_uiData.PanelFade);
                 break;
 
             case GameState.END_LOSE:
 
-                Debug.Log("END LOSE");
-
                 _panelGameplay.Close(_uiData.PanelFade);
                 _panelEnd.OpenLose(_uiData.PanelFade);
+                break;
+
+            case GameState.END_WIN:
+
+                _panelGameplay.Close(_uiData.PanelFade);
+                _panelEnd.OpenWin(_uiData.PanelFade);
                 break;
 
         }

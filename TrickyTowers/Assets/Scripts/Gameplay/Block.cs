@@ -32,7 +32,7 @@ public class Block : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D p_other)
     {
-        if (p_other.gameObject.tag == _blocksData.TagLose && !_isOutOfBounds)
+        if (p_other.gameObject.tag == _blocksData.TagLimits && !_isOutOfBounds)
         {
             _isOutOfBounds = true;
             Control(false);
@@ -55,7 +55,10 @@ public class Block : MonoBehaviour
         if (p_control)
         {
             foreach(BoxCollider2D f_collider in _colliders)
+            {
                 f_collider.edgeRadius = _blocksData.ControlledBlockRadius;
+                f_collider.tag = "Untagged";
+            }
 
             _rb.constraints = RigidbodyConstraints2D.FreezeAll;
             _isOutOfBounds = false;
@@ -64,7 +67,14 @@ public class Block : MonoBehaviour
         else
         {
             foreach(BoxCollider2D f_collider in _colliders)
+            {
                 f_collider.edgeRadius = STATIC_RADIUS;
+                f_collider.tag = _blocksData.TagPlaced;
+
+                // Refresh trigger detections after tag change.
+                f_collider.enabled = false;
+                f_collider.enabled = true;
+            }
 
             _rb.constraints = RigidbodyConstraints2D.None;
         }

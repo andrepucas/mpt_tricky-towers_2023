@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Lose Area
+  - Win Area
+  - Placed
   layers:
   - Default
   - TransparentFX

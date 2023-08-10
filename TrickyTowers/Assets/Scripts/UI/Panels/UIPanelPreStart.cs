@@ -32,23 +32,23 @@ public class UIPanelPreStart : UIPanelAbstract
     private IEnumerator Countdown()
     {
         YieldInstruction m_timerTime = new WaitForSeconds(
-            _uiData.CountdownCycle - _uiData.CountdownAnimTime);
+            _uiData.StartCountCycle - _uiData.StartCountAnimTime);
 
         float m_elapsedTime = 0;
 
-        yield return new WaitForSecondsRealtime(_uiData.CountdownDelay);
+        yield return new WaitForSecondsRealtime(_uiData.StartCountDelay);
 
-        for (int i = 0; i < _uiData.CountdownStrings.Count; i++)
+        for (int i = 0; i < _uiData.StartCountStrings.Count; i++)
         {
             _countdownTxt.fontSize = 0;
-            _countdownTxt.text = _uiData.CountdownStrings[i];
+            _countdownTxt.text = _uiData.StartCountStrings[i];
             m_elapsedTime = 0;
 
             // Lerp text appearing.
-            while (_countdownTxt.fontSize < _uiData.CountdownSize)
+            while (_countdownTxt.fontSize < _uiData.StartCountSize)
             {
                 _countdownTxt.fontSize = Mathf.Lerp(
-                    0, _uiData.CountdownSize, m_elapsedTime / _uiData.CountdownAnimTime);
+                    0, _uiData.StartCountSize, m_elapsedTime / _uiData.StartCountAnimTime);
 
                 m_elapsedTime += Time.unscaledDeltaTime;
                 yield return null;

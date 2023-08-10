@@ -12,14 +12,14 @@ public class BlocksDataSO : ScriptableObject
     [Tooltip("Collider radius of the controlled block. A value smaller than 0.1 (static collider size) allows for slight interception with static blocks.")]
     [SerializeField][Range(0.01f, 0.1f)] private float _controlledBlockRadius = 0.05f;
     [Tooltip("Name of the losing area colliders.")]
-    [SerializeField] private string _tagLose;
-    [Tooltip("Name of the winning area collider.")]
-    [SerializeField] private string _tagWin;
+    [SerializeField] private string _tagLimits;
+    [Tooltip("Name of the tag to apply to colliders when placed.")]
+    [SerializeField] private string _tagPlaced;
 
     public IReadOnlyList<BlockData> AllBlocks => _allBlocks;
     public float ControlledBlockRadius => _controlledBlockRadius;
-    public string TagLose => _tagLose;
-    public string TagWin => _tagWin;
+    public string TagLimits => _tagLimits;
+    public string TagPlaced => _tagPlaced;
 
     [Header("POOLING")]
     [Tooltip("Position, relative to the camera, for the controlled block to appear at.")]

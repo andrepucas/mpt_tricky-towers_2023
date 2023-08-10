@@ -15,8 +15,10 @@ public class Controller : MonoBehaviour
 
     // V A R I A B L E S
 
+    [Header("GAME ELEMENTS")]
     [SerializeField] private BlockPoolSpawner _blockPool;
     [SerializeField] private GuideBeam _guideBeam;
+    [SerializeField] private FinishLine _finishLine;
     [SerializeField] private GameObject _gameplayObjs;
 
     [Header("DATA")]
@@ -62,6 +64,7 @@ public class Controller : MonoBehaviour
         UIPanelMainMenu.OnPlayButtons += GameModePicked;
         UIPanelPreStart.OnCountdownEnd += Play;
         UIPanelGameplay.OnPauseButton += Pause;
+        UIPanelGameplay.OnCountdownEnd += ToWin;
         UIPanelPause.OnResumeButton += ToGameplay;
         UIPanelPause.OnRetryButton += StopAndRestart;
         UIPanelPause.OnQuitButton += StopAndQuit;
@@ -78,6 +81,7 @@ public class Controller : MonoBehaviour
         UIPanelMainMenu.OnPlayButtons -= GameModePicked;
         UIPanelPreStart.OnCountdownEnd -= Play;
         UIPanelGameplay.OnPauseButton -= Pause;
+        UIPanelGameplay.OnCountdownEnd -= ToWin;
         UIPanelPause.OnResumeButton -= ToGameplay;
         UIPanelPause.OnRetryButton -= StopAndRestart;
         UIPanelPause.OnQuitButton -= StopAndQuit;
@@ -104,8 +108,6 @@ public class Controller : MonoBehaviour
 
             if (_targetHeight > 0 && (_targetHeight != transform.position.y))
             {
-                Debug.Log(1);
-                
                 transform.position = Vector3.MoveTowards(transform.position, 
                     Vector3.up * _targetHeight, 
                     Time.deltaTime * _data.CamFollowSpeed);
@@ -218,6 +220,7 @@ public class Controller : MonoBehaviour
                 _blocksData.InitializeDictionaries();
                 _blockPool.Initialize();
                 _guideBeam.Initialize();
+                _finishLine.Initialize(_finishPos);
 
                 transform.position = _finishPos;
                 break;
@@ -244,6 +247,7 @@ public class Controller : MonoBehaviour
                 StartCoroutine(PanDownFromFinish());
 
                 _blockPool.PoolAllActive();
+                _finishLine.Reset();
                 _gameplayObjs.SetActive(true);
 
                 if (_data.InfiniteLives) _currentLives = -1;
@@ -264,6 +268,11 @@ public class Controller : MonoBehaviour
                 break;
 
             case GameState.END_LOSE:
+
+                StopGame();
+                break;
+
+            case GameState.END_WIN:
 
                 StopGame();
                 break;
@@ -297,6 +306,8 @@ public class Controller : MonoBehaviour
 
     private void HandleBlockLost(Block p_block)
     {
+        if (_currentState != GameState.GAMEPLAY) return;
+
         _currentLives--;
         OnLivesUpdated?.Invoke(_currentLives);
 
@@ -343,6 +354,7 @@ public class Controller : MonoBehaviour
     private void ToMenu() => UpdateGameState(GameState.MAIN_MENU);
     private void ToPreStart() => UpdateGameState(GameState.PRE_START);
     private void ToGameplay() => UpdateGameState(GameState.GAMEPLAY);
+    private void ToWin() => UpdateGameState(GameState.END_WIN);
 
     // C O R O U T I N E S
 
@@ -350,6 +362,8 @@ public class Controller : MonoBehaviour
     {
         transform.position = _finishPos;
         _elapsedTime = 0;
+
+        yield return new WaitForSeconds(_data.CamPreviewDelay);
 
         while (transform.position.y > 0)
         {

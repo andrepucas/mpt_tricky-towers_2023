@@ -16,17 +16,27 @@ MonoBehaviour:
   _setupDelay: 0.5
   _revealFade: 0.5
   _panelFade: 0.1
-  _displayCountdown: 1
-  _countdownStrings:
+  _displayStartCount: 1
+  _startCountStrings:
   - 3
   - 2
   - 1
   - GO!
-  _countdownDelay: 2
-  _countdownCycle: 1
-  _countdownAnimTime: 0.25
-  _countdownSize: 200
+  _startCountDelay: 2
+  _startCountCycle: 1
+  _startCountAnimTime: 0.25
+  _startCountSize: 250
   _animateLivesLost: 1
   _livesColorLerpTime: 0.15
+  _displayEndCount: 1
+  _endCountStrings:
+  - 3!
+  - 2!
+  - 1!
+  - 0!
+  _endCountDelay: 0.1
+  _endCountCycle: 1
+  _endCountAnimTime: 0.25
+  _endCountSize: 200
   _endSpriteWin: {fileID: 21300000, guid: 0f63b27ec2c3fda4ea2b7dad15c81017, type: 3}
   _endSpriteLose: {fileID: 21300000, guid: bc9ba5f12a091e94281965f0dbd8ceb0, type: 3}

@@ -21,12 +21,15 @@ public class GameDataSO : ScriptableObject
     [Header("CAMERA")]
     [Tooltip("Time (s) for camera to pan from finish line to start base, at the start.")]
     [SerializeField][Range(0, 10)] private float _camPreviewTime;
+    [Tooltip("Time (s) before camera starts panning from finish line to start base.")]
+    [SerializeField][Range(0, 3)] private float _camPreviewDelay;
     [Tooltip("Time (s) for camera to try and update its position, based on tower height.")]
     [SerializeField][Range(.5f, 5)] private float _camFollowDelay;
     [Tooltip("Speed ratio at which the camera follows the tower. Closer to 0 => smoother follow.")]
-    [SerializeField][Range(.1f, 2)] private float _camFollowSpeed;
+    [SerializeField][Range(.2f, 2)] private float _camFollowSpeed;
 
     public float CamPreviewTime => _camPreviewTime;
+    public float CamPreviewDelay => _camPreviewDelay;
     public float CamFollowDelay => _camFollowDelay;
     public float CamFollowSpeed => _camFollowSpeed;
 

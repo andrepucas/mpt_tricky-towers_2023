@@ -11,6 +11,7 @@ public class UIPanelGameplay : UIPanelAbstract
 {
     // E V E N T S
 
+    public static event Action OnCountdownEnd;
     public static event Action OnPauseButton;
 
     // V A R I A B L E S
@@ -23,11 +24,15 @@ public class UIPanelGameplay : UIPanelAbstract
     [SerializeField] private Image _livesImage;
     [SerializeField] private Color _livesColorRed;
     [SerializeField] private Color _livesColorWhite;
+
+    [Header("COUNTDOWN")]
+    [SerializeField] private TMP_Text _countdownTxt;
     
     [Header("DATA")]
     [SerializeField] private UserInterfaceDataSO _uiData;
 
     private float _animTime;
+    private Coroutine _countdown;
 
     // G A M E   O B J E C T
 
@@ -35,17 +40,24 @@ public class UIPanelGameplay : UIPanelAbstract
     {
         BlockPoolSpawner.OnNextBlockPicked += UpdateNextBlock;
         Controller.OnLivesUpdated += UpdateLivesCount;
+        FinishLine.OnFinishLineAction += ToggleFinishCounter;
     }
 
     private void OnDisable()
     {
         BlockPoolSpawner.OnNextBlockPicked -= UpdateNextBlock;
         Controller.OnLivesUpdated -= UpdateLivesCount;
+        FinishLine.OnFinishLineAction -= ToggleFinishCounter;
     }
 
     // M E T H O D S
 
-    public new void Open(float p_fade = 0) => base.Open(p_fade);
+    public new void Open(float p_fade = 0)
+    {
+        _countdownTxt.text = "";
+        base.Open(p_fade);
+    }
+
     public new void Close(float p_fade = 0) => base.Close(p_fade);
 
     private void UpdateNextBlock(Sprite p_sprite, Color p_color)
@@ -69,7 +81,17 @@ public class UIPanelGameplay : UIPanelAbstract
 
         else _livesText.text = "-";
     }
-    
+
+    private void ToggleFinishCounter(bool p_toggle)
+    {
+        if (p_toggle) _countdown = StartCoroutine(CountdownToFinish());
+        else StopCoroutine(_countdown);
+    }
+
+    public void BtnPause() => OnPauseButton?.Invoke();
+
+    // C O R O U T I N E S
+
     private IEnumerator AnimateLivesCount(int p_lives)
     {
         _animTime = 0;
@@ -99,5 +121,35 @@ public class UIPanelGameplay : UIPanelAbstract
         }
     }
 
-    public void BtnPause() => OnPauseButton?.Invoke();
+    private IEnumerator CountdownToFinish()
+    {
+        YieldInstruction m_timerTime = new WaitForSeconds(
+            _uiData.EndCountCycle - _uiData.EndCountAnimTime);
+
+        float m_elapsedTime = 0;
+
+        yield return new WaitForSecondsRealtime(_uiData.EndCountDelay);
+
+        for (int i = 0; i < _uiData.EndCountStrings.Count; i++)
+        {
+            _countdownTxt.fontSize = 0;
+            _countdownTxt.text = _uiData.EndCountStrings[i];
+            m_elapsedTime = 0;
+
+            // Lerp text appearing.
+            while (_countdownTxt.fontSize < _uiData.EndCountSize)
+            {
+                _countdownTxt.fontSize = Mathf.Lerp(
+                    0, _uiData.EndCountSize, m_elapsedTime / _uiData.EndCountAnimTime);
+
+                m_elapsedTime += Time.unscaledDeltaTime;
+                yield return null;
+            }
+
+            yield return m_timerTime;
+        }
+
+        // Raise event when countdown ends.
+        OnCountdownEnd?.Invoke();
+    }
 }
