@@ -19,6 +19,9 @@ public class UIPanelEnd : UIPanelAbstract
 
     // M E T H O D S
 
+    public void Setup() => Close();
+    public new void Close(float p_fade = 0) => base.Close(p_fade);
+
     public void OpenWin(float p_fade = 0)
     {
         _titleImg.sprite = _uiData.EndSpriteWin;
@@ -30,8 +33,6 @@ public class UIPanelEnd : UIPanelAbstract
         _titleImg.sprite = _uiData.EndSpriteLose;
         Open(p_fade);
     }
-
-    public new void Close(float p_fade = 0) => base.Close(p_fade);
 
     public void BtnRetry() => OnRetryButton?.Invoke();
     public void BtnQuit() => OnQuitButton?.Invoke();

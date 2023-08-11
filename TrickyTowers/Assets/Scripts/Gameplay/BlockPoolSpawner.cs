@@ -12,6 +12,7 @@ public class BlockPoolSpawner : MonoBehaviour
     // V A R I A B L E S
 
     [SerializeField] private Transform _activeBlocksFolder;
+    [SerializeField] private Transform _cpuSpawnTransform;
     [SerializeField] private BlocksDataSO _blocksData;
 
     private const int POOL_HEIGHT = 100;
@@ -21,9 +22,9 @@ public class BlockPoolSpawner : MonoBehaviour
     private List<Block> _activePool;
 
     private List<BlockType> _allTypes;
-    private BlockType _lastBlockType;
-    private BlockType _newBlockType;
-    private Block _block;
+    private BlockType _lastPlayerBlockType, _lastCpuBlockType;
+    private BlockType _nextPlayerBlockType, _nextCpuBlockType;
+    private Block _playerBlock, _cpuBlock;
 
     // M E T H O D S
 
@@ -71,43 +72,76 @@ public class BlockPoolSpawner : MonoBehaviour
             SetStandby(f_block);
     }
 
-    public Block GetBlock()
+    public Block GetPlayerBlock()
     {
         // If new block hasn't been pre-picked yet.
-        if (_newBlockType == BlockType.NONE)
-            _newBlockType = _allTypes[Random.Range(0, _allTypes.Count)];
+        if (_nextPlayerBlockType == BlockType.NONE)
+            _nextPlayerBlockType = _allTypes[Random.Range(0, _allTypes.Count)];
 
-        // If pool has this type of block, get it. 
-        if (_standbyPool[_newBlockType].Count > 0)
-            _block = _standbyPool[_newBlockType][0];
+        _playerBlock = GetBlock(_nextPlayerBlockType, _blocksData.LayerPlayer);
+        _lastPlayerBlockType = _nextPlayerBlockType;
+        PickNextPlayerBlock();
 
-        // If not, create it.
-        else _block = CreateBlock(_newBlockType);
-
-        // Place it at the spawners position, in a static parent, and enable it.
-        _block.transform.localPosition = Vector3.zero;
-        _block.transform.rotation = Quaternion.identity;
-        _block.transform.SetParent(_activeBlocksFolder);
-        _block.gameObject.SetActive(true);
-
-        // Manage pools.
-        _standbyPool[_newBlockType].Remove(_block);
-        _activePool.Add(_block);
-
-        _lastBlockType = _newBlockType;
-        PickNextBlock();
-
-        return _block;
+        return _playerBlock;
     }
 
-    private void PickNextBlock()
+    public Block GetCpuBlock()
+    {
+        // Pick a random block, different from the last.
+        do {_nextCpuBlockType = _allTypes[Random.Range(0, _allTypes.Count)];}
+        while (_nextCpuBlockType == _lastCpuBlockType);
+
+        _cpuBlock = GetBlock(_nextCpuBlockType, _blocksData.LayerCPU);
+        _lastCpuBlockType = _nextCpuBlockType;
+
+        return _cpuBlock;
+    }
+
+    private Block GetBlock(BlockType p_blockType, int p_layer)
+    {
+        Block m_block;
+
+        // If pool has this type of block, get it. 
+        if (_standbyPool[p_blockType].Count > 0)
+            m_block = _standbyPool[p_blockType][0];
+
+        // If not, create it.
+        else m_block = CreateBlock(_nextPlayerBlockType);
+
+        // Prepare block.
+        m_block.transform.SetParent(_activeBlocksFolder);
+        m_block.transform.rotation = Quaternion.identity;
+
+        // Spawn position depends on who's controlling it.
+        if (p_layer == _blocksData.LayerPlayer)
+            m_block.transform.position = transform.position;
+
+        else m_block.transform.position = _cpuSpawnTransform.position;
+
+        // Change layer game object & children colliders.
+        m_block.gameObject.layer = p_layer;
+
+        foreach(Transform f_child in m_block.transform)
+            f_child.gameObject.layer = p_layer;
+
+        // Enable it.
+        m_block.gameObject.SetActive(true);
+
+        // Manage pools.
+        _standbyPool[p_blockType].Remove(m_block);
+        _activePool.Add(m_block);
+
+        return m_block;
+    }
+
+    private void PickNextPlayerBlock()
     {
         // Pick random block, different from last.
-        do {_newBlockType = _allTypes[Random.Range(0, _allTypes.Count)];}
-        while (_newBlockType == _lastBlockType);
+        do {_nextPlayerBlockType = _allTypes[Random.Range(0, _allTypes.Count)];}
+        while (_nextPlayerBlockType == _lastPlayerBlockType);
 
-        OnNextBlockPicked?.Invoke(_blocksData.SpriteOf[_newBlockType], 
-            _blocksData.ColorOf[_newBlockType]);
+        OnNextBlockPicked?.Invoke(_blocksData.SpriteOf[_nextPlayerBlockType], 
+            _blocksData.ColorOf[_nextPlayerBlockType]);
     }
 
     private Block CreateBlock(BlockType p_type)

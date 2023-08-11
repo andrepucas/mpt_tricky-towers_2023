@@ -86,5 +86,7 @@ MonoBehaviour:
   _controlledBlockRadius: 0.05
   _tagLimits: Lose Area
   _tagPlaced: Placed
+  _layerPlayer: 6
+  _layerCpu: 7
   _spawnPos: {x: 0, y: 16}
   _initialAmountEach: 5

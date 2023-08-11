@@ -17,7 +17,20 @@ public class UIPanelPreStart : UIPanelAbstract
     [SerializeField] private TMP_Text _countdownTxt;
     [SerializeField] private UserInterfaceDataSO _uiData;
 
+    private YieldInstruction _timerTime;
+    private float _coroutineTime;
+
     // M E T H O D S
+
+    public void Setup()
+    {
+        _timerTime = new WaitForSeconds(
+            _uiData.StartCountCycle - _uiData.StartCountAnimTime);
+
+        Close();
+    }
+
+    public new void Close(float p_fade = 0) => base.Close(p_fade);
 
     public new void Open(float p_fade = 0)
     {
@@ -27,14 +40,9 @@ public class UIPanelPreStart : UIPanelAbstract
         StartCoroutine(Countdown());
     }
 
-    public new void Close(float p_fade = 0) => base.Close(p_fade);
-
     private IEnumerator Countdown()
     {
-        YieldInstruction m_timerTime = new WaitForSeconds(
-            _uiData.StartCountCycle - _uiData.StartCountAnimTime);
-
-        float m_elapsedTime = 0;
+        _coroutineTime = 0;
 
         yield return new WaitForSecondsRealtime(_uiData.StartCountDelay);
 
@@ -42,19 +50,19 @@ public class UIPanelPreStart : UIPanelAbstract
         {
             _countdownTxt.fontSize = 0;
             _countdownTxt.text = _uiData.StartCountStrings[i];
-            m_elapsedTime = 0;
+            _coroutineTime = 0;
 
             // Lerp text appearing.
             while (_countdownTxt.fontSize < _uiData.StartCountSize)
             {
                 _countdownTxt.fontSize = Mathf.Lerp(
-                    0, _uiData.StartCountSize, m_elapsedTime / _uiData.StartCountAnimTime);
+                    0, _uiData.StartCountSize, _coroutineTime / _uiData.StartCountAnimTime);
 
-                m_elapsedTime += Time.unscaledDeltaTime;
+                _coroutineTime += Time.unscaledDeltaTime;
                 yield return null;
             }
 
-            yield return m_timerTime;
+            yield return _timerTime;
         }
 
         // Raise event when countdown ends.

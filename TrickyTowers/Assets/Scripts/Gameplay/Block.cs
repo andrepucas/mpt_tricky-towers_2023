@@ -8,7 +8,7 @@ public class Block : MonoBehaviour
 {
     // E V E N T S
 
-    public static event Action OnPlaced;
+    public static event Action<int> OnPlaced;
     public static event Action<Block> OnOutOfBounds;
 
     // V A R I A B L E S
@@ -42,7 +42,7 @@ public class Block : MonoBehaviour
         else if (_isControlled)
         {
             Control(false);
-            OnPlaced?.Invoke();
+            OnPlaced?.Invoke(gameObject.layer);
         }
     }
 

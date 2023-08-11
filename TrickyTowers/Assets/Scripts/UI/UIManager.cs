@@ -25,8 +25,8 @@ public class UIManager : MonoBehaviour
 
     // G A M E   O B J E C T
 
-    private void OnEnable() => Controller.OnNewGameState += UpdateDisplayUI;
-    private void OnDisable() => Controller.OnNewGameState -= UpdateDisplayUI;
+    private void OnEnable() => GameManager.OnNewGameState += UpdateDisplayUI;
+    private void OnDisable() => GameManager.OnNewGameState -= UpdateDisplayUI;
 
     // M E T H O D S
 
@@ -37,7 +37,7 @@ public class UIManager : MonoBehaviour
             case GameState.SETUP:
 
                 _fpsCounter.SetActive(_uiData.DisplayFPS);
-                CloseAllPanels();
+                SetupPanels();
                 StartCoroutine(SetupDelay());
                 break;
 
@@ -96,13 +96,13 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void CloseAllPanels()
+    private void SetupPanels()
     {
-        _panelMainMenu.Close();
-        _panelPreStart.Close();
-        _panelGameplay.Close();
-        _panelPause.Close();
-        _panelEnd.Close();
+        _panelMainMenu.Setup();
+        _panelPreStart.Setup();
+        _panelGameplay.Setup();
+        _panelPause.Setup();
+        _panelEnd.Setup();
     }
 
     // C O R O U T I N E S

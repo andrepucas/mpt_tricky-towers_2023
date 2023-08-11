@@ -16,9 +16,12 @@ public class UIPanelGameplay : UIPanelAbstract
 
     // V A R I A B L E S
 
+    [Header("CPU")]
+    [SerializeField] private GameObject _cpuDisplay;
+
     [Header("NEXT BLOCK")]
     [SerializeField] private Image _nextBlockImage;
-    
+
     [Header("LIVES")]
     [SerializeField] private TMP_Text _livesText;
     [SerializeField] private Image _livesImage;
@@ -33,32 +36,44 @@ public class UIPanelGameplay : UIPanelAbstract
 
     private float _animTime;
     private Coroutine _countdown;
+    private YieldInstruction _timerTime;
+    private float _coroutineTime;
 
     // G A M E   O B J E C T
 
     private void OnEnable()
     {
         BlockPoolSpawner.OnNextBlockPicked += UpdateNextBlock;
-        Controller.OnLivesUpdated += UpdateLivesCount;
+        ControllerPlayer.OnLivesUpdated += UpdateLivesCount;
+        GameManager.OnDisplayCPU += ToggleCpuDisplay;
         FinishLine.OnFinishLineAction += ToggleFinishCounter;
     }
 
     private void OnDisable()
     {
         BlockPoolSpawner.OnNextBlockPicked -= UpdateNextBlock;
-        Controller.OnLivesUpdated -= UpdateLivesCount;
+        ControllerPlayer.OnLivesUpdated -= UpdateLivesCount;
+        GameManager.OnDisplayCPU -= ToggleCpuDisplay;
         FinishLine.OnFinishLineAction -= ToggleFinishCounter;
     }
 
     // M E T H O D S
+
+    public void Setup()
+    {
+        _timerTime = new WaitForSeconds(
+            _uiData.EndCountCycle - _uiData.EndCountAnimTime);
+
+        Close();
+    }
+
+    public new void Close(float p_fade = 0) => base.Close(p_fade);
 
     public new void Open(float p_fade = 0)
     {
         _countdownTxt.text = "";
         base.Open(p_fade);
     }
-
-    public new void Close(float p_fade = 0) => base.Close(p_fade);
 
     private void UpdateNextBlock(Sprite p_sprite, Color p_color)
     {
@@ -93,6 +108,8 @@ public class UIPanelGameplay : UIPanelAbstract
             _countdownTxt.fontSize = 0;
         }
     }
+
+    private void ToggleCpuDisplay(bool p_toggle) => _cpuDisplay.SetActive(p_toggle);
 
     public void BtnPause() => OnPauseButton?.Invoke();
 
@@ -129,10 +146,8 @@ public class UIPanelGameplay : UIPanelAbstract
 
     private IEnumerator CountdownToFinish()
     {
-        YieldInstruction m_timerTime = new WaitForSeconds(
-            _uiData.EndCountCycle - _uiData.EndCountAnimTime);
 
-        float m_elapsedTime = 0;
+        _coroutineTime = 0;
 
         yield return new WaitForSecondsRealtime(_uiData.EndCountDelay);
 
@@ -140,19 +155,19 @@ public class UIPanelGameplay : UIPanelAbstract
         {
             _countdownTxt.fontSize = 0;
             _countdownTxt.text = _uiData.EndCountStrings[i];
-            m_elapsedTime = 0;
+            _coroutineTime = 0;
 
             // Lerp text appearing.
             while (_countdownTxt.fontSize < _uiData.EndCountSize)
             {
                 _countdownTxt.fontSize = Mathf.Lerp(
-                    0, _uiData.EndCountSize, m_elapsedTime / _uiData.EndCountAnimTime);
+                    0, _uiData.EndCountSize, _coroutineTime / _uiData.EndCountAnimTime);
 
-                m_elapsedTime += Time.deltaTime;
+                _coroutineTime += Time.deltaTime;
                 yield return null;
             }
 
-            yield return m_timerTime;
+            yield return _timerTime;
         }
 
         // Raise event when countdown ends.

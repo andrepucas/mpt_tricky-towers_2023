@@ -13,8 +13,9 @@ public class UIPanelPause : UIPanelAbstract
 
     // M E T H O D S
 
-    public new void Open(float p_fade = 0) => base.Open(p_fade);
+    public void Setup() => Close();
     public new void Close(float p_fade = 0) => base.Close(p_fade);
+    public new void Open(float p_fade = 0) => base.Open(p_fade);
 
     public void BtnResume() => OnResumeButton?.Invoke();
     public void BtnRetry() => OnRetryButton?.Invoke();

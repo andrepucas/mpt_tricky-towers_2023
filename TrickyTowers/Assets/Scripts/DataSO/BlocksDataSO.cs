@@ -15,11 +15,17 @@ public class BlocksDataSO : ScriptableObject
     [SerializeField] private string _tagLimits;
     [Tooltip("Name of the tag to apply to colliders when placed.")]
     [SerializeField] private string _tagPlaced;
+    [Tooltip("Layer (int) of the blocks used by the player.")]
+    [SerializeField] private int _layerPlayer;
+    [Tooltip("Layer (int) of the blocks used by the CPU.")]
+    [SerializeField] private int _layerCpu;
 
     public IReadOnlyList<BlockData> AllBlocks => _allBlocks;
     public float ControlledBlockRadius => _controlledBlockRadius;
     public string TagLimits => _tagLimits;
     public string TagPlaced => _tagPlaced;
+    public int LayerPlayer => _layerPlayer;
+    public int LayerCPU => _layerCpu;
 
     [Header("POOLING")]
     [Tooltip("Position, relative to the camera, for the controlled block to appear at.")]
