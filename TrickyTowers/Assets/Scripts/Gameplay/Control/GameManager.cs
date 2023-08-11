@@ -41,9 +41,9 @@ public class GameManager : MonoBehaviour
         UIManager.OnSetupComplete += ToMenu;
         UIPanelMainMenu.OnPlayButtons += GameModePicked;
         UIPanelPreStart.OnCountdownEnd += Play;
-        UIPanelGameplay.OnPauseButton += Pause;
+        UIPanelGameplay.OnPauseButton += ToPause;
         UIPanelGameplay.OnCountdownEnd += EndGame;
-        UIPanelPause.OnResumeButton += ToGameplay;
+        UIPanelPause.OnResumeButton += Resume;
         UIPanelPause.OnRetryButton += StopAndRestart;
         UIPanelPause.OnQuitButton += StopAndQuit;
         UIPanelEnd.OnQuitButton += StopAndQuit;
@@ -57,9 +57,9 @@ public class GameManager : MonoBehaviour
         UIManager.OnSetupComplete -= ToMenu;
         UIPanelMainMenu.OnPlayButtons -= GameModePicked;
         UIPanelPreStart.OnCountdownEnd -= Play;
-        UIPanelGameplay.OnPauseButton -= Pause;
+        UIPanelGameplay.OnPauseButton -= ToPause;
         UIPanelGameplay.OnCountdownEnd -= EndGame;
-        UIPanelPause.OnResumeButton -= ToGameplay;
+        UIPanelPause.OnResumeButton -= Resume;
         UIPanelPause.OnRetryButton -= StopAndRestart;
         UIPanelPause.OnQuitButton -= StopAndQuit;
         UIPanelEnd.OnQuitButton -= StopAndQuit;
@@ -143,6 +143,8 @@ public class GameManager : MonoBehaviour
             case GameState.PAUSE:
 
                 Time.timeScale = 0;
+
+                _playerController.Pause(true);
                 break;
 
             case GameState.END_LOSE:
@@ -180,10 +182,10 @@ public class GameManager : MonoBehaviour
         UpdateGameState(GameState.GAMEPLAY);
     }
 
-    private void Pause()
+    private void Resume()
     {
-        _playerController.BreakInput();
-        UpdateGameState(GameState.PAUSE);
+        _playerController.Pause(false);
+        UpdateGameState(GameState.GAMEPLAY);
     }
 
     private void StopAndRestart()
@@ -212,5 +214,5 @@ public class GameManager : MonoBehaviour
 
     private void ToPreStart() => UpdateGameState(GameState.PRE_START);
     private void ToMenu() => UpdateGameState(GameState.MAIN_MENU);
-    private void ToGameplay() => UpdateGameState(GameState.GAMEPLAY);
+    private void ToPause() => UpdateGameState(GameState.PAUSE);
 }

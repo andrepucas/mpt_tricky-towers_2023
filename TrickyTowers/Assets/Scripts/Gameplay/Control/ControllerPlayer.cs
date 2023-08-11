@@ -31,6 +31,7 @@ public class ControllerPlayer : ControllerAbstract
     private bool _inputDraggingSide;
     private bool _inputDraggingDown;
     private bool _inputPressedThisBlock;
+    private bool _isPaused;
 
     // G A M E   O B J E C T
 
@@ -50,7 +51,7 @@ public class ControllerPlayer : ControllerAbstract
     {
         base.Update();
 
-        if (!_isActive || _currentBlock == null) return;
+        if (!_isActive || _isPaused || _currentBlock == null) return;
 
         // Input - On press.
         if (Input.GetMouseButtonDown(0))
@@ -148,6 +149,7 @@ public class ControllerPlayer : ControllerAbstract
     public void Reset(Vector3 p_startPos)
     {
         FollowTower(false);
+        _isPaused = false;
 
         if (_gameData.InfiniteLives) _currentLives = -1;
         else _currentLives = _gameData.NumberOfLives;
@@ -195,8 +197,11 @@ public class ControllerPlayer : ControllerAbstract
         base.HandleBlockLost(p_block);
     }
 
-    public void BreakInput() => _inputPressedThisBlock = false;
-
+    public void Pause(bool p_paused)
+    {
+        _inputPressedThisBlock = false;
+        _isPaused = p_paused;
+    }
 
     // C O R O U T I N E S
 
