@@ -9,14 +9,17 @@ public class FinishLine : MonoBehaviour
 {
     // E V E N T S
 
-    public static event Action<bool> OnFinishLineAction;
+    public static event Action<bool> OnWinAction;
+    public static event Action<bool> OnLoseAction;
 
     // V A R I A B L E S
 
     [SerializeField] private BlocksDataSO _blocksData;
 
-    private HashSet<Transform> _blocksDetected;
-    private bool _eventSent;
+    private HashSet<Transform> _playerBlocksDetected;
+    private HashSet<Transform> _cpuBlocksDetected;
+    private bool _winEventSent;
+    private bool _loseEventSent;
 
     // G A M E   O B J E C T
 
@@ -24,12 +27,26 @@ public class FinishLine : MonoBehaviour
     {
         if (p_other.gameObject.tag == _blocksData.TagPlaced)
         {
-            _blocksDetected.Add(p_other.transform.parent);
-
-            if (_blocksDetected.Count > 0 && !_eventSent)
+            if (p_other.gameObject.layer == _blocksData.LayerPlayer)
             {
-                _eventSent = true;
-                OnFinishLineAction?.Invoke(true);
+                _playerBlocksDetected.Add(p_other.transform.parent);
+
+                if (_playerBlocksDetected.Count > 0 && !_winEventSent)
+                {
+                    _winEventSent = true;
+                    OnWinAction?.Invoke(true);
+                }
+            }
+
+            else if (p_other.gameObject.layer == _blocksData.LayerCPU)
+            {
+                _cpuBlocksDetected.Add(p_other.transform.parent);
+
+                if (_cpuBlocksDetected.Count > 0 && !_loseEventSent)
+                {
+                    _loseEventSent = true;
+                    OnLoseAction?.Invoke(true);
+                }
             }
         }
     }
@@ -38,12 +55,26 @@ public class FinishLine : MonoBehaviour
     {
         if (p_other.gameObject.tag == _blocksData.TagPlaced)
         {
-            _blocksDetected.Remove(p_other.transform.parent);
-
-            if (_blocksDetected.Count <= 0 && _eventSent)
+            if (p_other.gameObject.layer == _blocksData.LayerPlayer)
             {
-                _eventSent = false;
-                OnFinishLineAction?.Invoke(false);
+                _playerBlocksDetected.Remove(p_other.transform.parent);
+
+                if (_playerBlocksDetected.Count <= 0 && _winEventSent)
+                {
+                    _winEventSent = false;
+                    OnWinAction?.Invoke(false);
+                }
+            }
+
+            else if (p_other.gameObject.layer == _blocksData.LayerCPU)
+            {
+                _cpuBlocksDetected.Remove(p_other.transform.parent);
+
+                if (_cpuBlocksDetected.Count <= 0 && _loseEventSent)
+                {
+                    _loseEventSent = false;
+                    OnLoseAction?.Invoke(false);
+                }
             }
         }
     }
@@ -53,12 +84,14 @@ public class FinishLine : MonoBehaviour
     public void Initialize(Vector3 p_position)
     {
         transform.position = p_position;
-        _blocksDetected = new HashSet<Transform>();
+        _playerBlocksDetected = new HashSet<Transform>();
+        _cpuBlocksDetected = new HashSet<Transform>();
     }
 
     public void Reset()
     {
-        _blocksDetected.Clear();
-        _eventSent = false;
+        _playerBlocksDetected.Clear();
+        _cpuBlocksDetected.Clear();
+        _winEventSent = false;
     }
 }

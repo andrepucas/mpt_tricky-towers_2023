@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _numberOfLives: 5
   _infiniteLives: 0
-  _finishHeight: 10
-  _camPreviewTime: 2
+  _finishHeight: 30
+  _camPreviewTime: 1
   _camPreviewDelay: 1
   _camFollowDelay: 2
   _camFollowSpeed: 0.5
   _widthUnits: 18
   _heightUnits: 40
   _rotateDirection: -1
-  _downSpeed: 2
+  _normalSpeed: 2
   _dragDownSpeed: 10
   _dragSideSnap: 0.5
   _swipeMaxTime: 0.3

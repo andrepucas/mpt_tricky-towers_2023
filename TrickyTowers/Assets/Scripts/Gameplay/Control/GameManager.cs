@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
         UIPanelMainMenu.OnPlayButtons += GameModePicked;
         UIPanelPreStart.OnCountdownEnd += Play;
         UIPanelGameplay.OnPauseButton += Pause;
-        UIPanelGameplay.OnCountdownEnd += ToWin;
+        UIPanelGameplay.OnCountdownEnd += EndGame;
         UIPanelPause.OnResumeButton += ToGameplay;
         UIPanelPause.OnRetryButton += StopAndRestart;
         UIPanelPause.OnQuitButton += StopAndQuit;
@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
         UIPanelMainMenu.OnPlayButtons -= GameModePicked;
         UIPanelPreStart.OnCountdownEnd -= Play;
         UIPanelGameplay.OnPauseButton -= Pause;
-        UIPanelGameplay.OnCountdownEnd -= ToWin;
+        UIPanelGameplay.OnCountdownEnd -= EndGame;
         UIPanelPause.OnResumeButton -= ToGameplay;
         UIPanelPause.OnRetryButton -= StopAndRestart;
         UIPanelPause.OnQuitButton -= StopAndQuit;
@@ -204,8 +204,13 @@ public class GameManager : MonoBehaviour
         UpdateGameState(GameState.MAIN_MENU);
     }
 
+    private void EndGame(bool p_result)
+    {
+        if (p_result) UpdateGameState(GameState.END_WIN);
+        else UpdateGameState(GameState.END_LOSE);
+    }
+
     private void ToPreStart() => UpdateGameState(GameState.PRE_START);
     private void ToMenu() => UpdateGameState(GameState.MAIN_MENU);
     private void ToGameplay() => UpdateGameState(GameState.GAMEPLAY);
-    private void ToWin() => UpdateGameState(GameState.END_WIN);
 }

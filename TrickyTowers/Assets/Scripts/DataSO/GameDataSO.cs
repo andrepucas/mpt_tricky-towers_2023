@@ -12,7 +12,7 @@ public class GameDataSO : ScriptableObject
     [Tooltip("Enable this to play with infinite lives.")]
     [SerializeField] private bool _infiniteLives;
     [Tooltip("Height that tower must reach to win.")]
-    [SerializeField][Range(5, 40)] private int _finishHeight = 40;
+    [SerializeField][Range(0, 40)] private int _finishHeight = 40;
 
     public int NumberOfLives => _numberOfLives;
     public bool InfiniteLives => _infiniteLives;
@@ -41,7 +41,7 @@ public class GameDataSO : ScriptableObject
     [Tooltip("Direction for 90 rotation. (-1 = Tetris rotation)")]
     [SerializeField][Range(-1, 1)] private int _rotateDirection;
     [Tooltip("Normal fall speed for the controller block.")]
-    [SerializeField][Range(0.5f, 5)] private float _downSpeed;
+    [SerializeField][Range(0.5f, 5)] private float _normalSpeed;
     [Tooltip("Dragging down speed for the controller block.")]
     [SerializeField][Range(1, 20)] private float _dragDownSpeed;
     [Tooltip("Unit ratio that the controlled block snaps to when being dragged horizontally.")]
@@ -56,7 +56,7 @@ public class GameDataSO : ScriptableObject
     public int WidthUnits => _widthUnits;
     public int HeightUnits => _heightUnits;
     public int RotateDir => _rotateDirection;
-    public float DownSpeed => _downSpeed;
+    public float NormalSpeed => _normalSpeed;
     public float DragDownSpeed => _dragDownSpeed;
     public float DragSideSnap => _dragSideSnap;
     public float SwipeMaxTime => _swipeMaxTime;

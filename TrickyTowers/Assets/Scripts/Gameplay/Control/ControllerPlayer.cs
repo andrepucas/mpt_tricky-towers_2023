@@ -129,7 +129,7 @@ public class ControllerPlayer : ControllerAbstract
 
         // If not, move block down at normal speed.
         else _currentBlock.transform.Translate(
-            Vector3.down * _gameData.DownSpeed * Time.deltaTime, Space.World);
+            Vector3.down * _gameData.NormalSpeed * Time.deltaTime, Space.World);
     }
 
     // M E T H O D S

@@ -11,7 +11,7 @@ public class UIPanelGameplay : UIPanelAbstract
 {
     // E V E N T S
 
-    public static event Action OnCountdownEnd;
+    public static event Action<bool> OnCountdownEnd;
     public static event Action OnPauseButton;
 
     // V A R I A B L E S
@@ -28,16 +28,19 @@ public class UIPanelGameplay : UIPanelAbstract
     [SerializeField] private Color _livesColorRed;
     [SerializeField] private Color _livesColorWhite;
 
-    [Header("COUNTDOWN")]
-    [SerializeField] private TMP_Text _countdownTxt;
+    [Header("COUNTDOWNS")]
+    [SerializeField] private TMP_Text _winCountdownTxt;
+    [SerializeField] private TMP_Text _loseCountdownTxt;
     
     [Header("DATA")]
     [SerializeField] private UserInterfaceDataSO _uiData;
 
     private float _animTime;
-    private Coroutine _countdown;
+    private Coroutine _winCountdown;
+    private Coroutine _loseCountdown;
     private YieldInstruction _timerTime;
-    private float _coroutineTime;
+    private float _winCoroutineTime;
+    private float _loseCoroutineTime;
 
     // G A M E   O B J E C T
 
@@ -46,7 +49,8 @@ public class UIPanelGameplay : UIPanelAbstract
         BlockPoolSpawner.OnNextBlockPicked += UpdateNextBlock;
         ControllerPlayer.OnLivesUpdated += UpdateLivesCount;
         GameManager.OnDisplayCPU += ToggleCpuDisplay;
-        FinishLine.OnFinishLineAction += ToggleFinishCounter;
+        FinishLine.OnWinAction += ToggleWinCounter;
+        FinishLine.OnLoseAction += ToggleLoseCounter;
     }
 
     private void OnDisable()
@@ -54,7 +58,8 @@ public class UIPanelGameplay : UIPanelAbstract
         BlockPoolSpawner.OnNextBlockPicked -= UpdateNextBlock;
         ControllerPlayer.OnLivesUpdated -= UpdateLivesCount;
         GameManager.OnDisplayCPU -= ToggleCpuDisplay;
-        FinishLine.OnFinishLineAction -= ToggleFinishCounter;
+        FinishLine.OnWinAction -= ToggleWinCounter;
+        FinishLine.OnLoseAction -= ToggleLoseCounter;
     }
 
     // M E T H O D S
@@ -71,7 +76,9 @@ public class UIPanelGameplay : UIPanelAbstract
 
     public new void Open(float p_fade = 0)
     {
-        _countdownTxt.text = "";
+        _winCountdownTxt.text = "";
+        _loseCountdownTxt.text = "";
+
         base.Open(p_fade);
     }
 
@@ -97,15 +104,27 @@ public class UIPanelGameplay : UIPanelAbstract
         else _livesText.text = "-";
     }
 
-    private void ToggleFinishCounter(bool p_toggle)
+    private void ToggleWinCounter(bool p_toggle)
     {
-        if (p_toggle) _countdown = StartCoroutine(CountdownToFinish());
+        if (p_toggle) _winCountdown = StartCoroutine(CountdownToWin());
 
         else
         {
-            StopCoroutine(_countdown);
-            _countdownTxt.text = "";
-            _countdownTxt.fontSize = 0;
+            StopCoroutine(_winCountdown);
+            _winCountdownTxt.text = "";
+            _winCountdownTxt.fontSize = 0;
+        }
+    }
+
+    private void ToggleLoseCounter(bool p_toggle)
+    {
+        if (p_toggle) _loseCountdown = StartCoroutine(CountdownToLose());
+
+        else
+        {
+            StopCoroutine(_loseCountdown);
+            _loseCountdownTxt.text = "";
+            _loseCountdownTxt.fontSize = 0;
         }
     }
 
@@ -144,26 +163,25 @@ public class UIPanelGameplay : UIPanelAbstract
         }
     }
 
-    private IEnumerator CountdownToFinish()
+    private IEnumerator CountdownToWin()
     {
-
-        _coroutineTime = 0;
+        _winCoroutineTime = 0;
 
         yield return new WaitForSecondsRealtime(_uiData.EndCountDelay);
 
         for (int i = 0; i < _uiData.EndCountStrings.Count; i++)
         {
-            _countdownTxt.fontSize = 0;
-            _countdownTxt.text = _uiData.EndCountStrings[i];
-            _coroutineTime = 0;
+            _winCountdownTxt.fontSize = 0;
+            _winCountdownTxt.text = _uiData.EndCountStrings[i];
+            _winCoroutineTime = 0;
 
             // Lerp text appearing.
-            while (_countdownTxt.fontSize < _uiData.EndCountSize)
+            while (_winCountdownTxt.fontSize < _uiData.EndCountWinSize)
             {
-                _countdownTxt.fontSize = Mathf.Lerp(
-                    0, _uiData.EndCountSize, _coroutineTime / _uiData.EndCountAnimTime);
+                _winCountdownTxt.fontSize = Mathf.Lerp(
+                    0, _uiData.EndCountWinSize, _winCoroutineTime / _uiData.EndCountAnimTime);
 
-                _coroutineTime += Time.deltaTime;
+                _winCoroutineTime += Time.deltaTime;
                 yield return null;
             }
 
@@ -171,6 +189,35 @@ public class UIPanelGameplay : UIPanelAbstract
         }
 
         // Raise event when countdown ends.
-        OnCountdownEnd?.Invoke();
+        OnCountdownEnd?.Invoke(true);
+    }
+
+    private IEnumerator CountdownToLose()
+    {
+        _loseCoroutineTime = 0;
+
+        yield return new WaitForSecondsRealtime(_uiData.EndCountDelay);
+
+        for (int i = 0; i < _uiData.EndCountStrings.Count; i++)
+        {
+            _loseCountdownTxt.fontSize = 0;
+            _loseCountdownTxt.text = _uiData.EndCountStrings[i];
+            _loseCoroutineTime = 0;
+
+            // Lerp text appearing.
+            while (_loseCountdownTxt.fontSize < _uiData.EndCountLoseSize)
+            {
+                _loseCountdownTxt.fontSize = Mathf.Lerp(
+                    0, _uiData.EndCountLoseSize, _loseCoroutineTime / _uiData.EndCountAnimTime);
+
+                _loseCoroutineTime += Time.deltaTime;
+                yield return null;
+            }
+
+            yield return _timerTime;
+        }
+
+        // Raise event when countdown ends.
+        OnCountdownEnd?.Invoke(false);
     }
 }

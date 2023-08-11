@@ -56,8 +56,10 @@ public class UserInterfaceDataSO : ScriptableObject
     [SerializeField][Range(0, 3)] private float _endCountCycle = 1;
     [Tooltip("Time (s) each string takes to scale up. Default = 0.5s")]
     [SerializeField][Range(0, 3)] private float _endCountAnimTime = 0.5f;
-    [Tooltip("Target font size.")]
-    [SerializeField] private float _endCountSize;
+    [Tooltip("Target font size for win countdown.")]
+    [SerializeField] private float _endCountWinSize;
+    [Tooltip("Target font size for lose countdown.")]
+    [SerializeField] private float _endCountLoseSize;
 
     public bool AnimateLivesLost => _animateLivesLost;
     public float LivesColorLerpTime => _livesColorLerpTime;
@@ -66,7 +68,8 @@ public class UserInterfaceDataSO : ScriptableObject
     public float EndCountDelay => _endCountDelay;
     public float EndCountCycle => _endCountCycle;
     public float EndCountAnimTime => _endCountAnimTime;
-    public float EndCountSize => _endCountSize;
+    public float EndCountWinSize => _endCountWinSize;
+    public float EndCountLoseSize => _endCountLoseSize;
 
     [Header("GAME OVER")]
     [SerializeField] private Sprite _endSpriteWin;
