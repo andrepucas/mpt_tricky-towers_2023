@@ -929,7 +929,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 133482765}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -3187,7 +3187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.39215687, b: 0.39215687, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7599,6 +7599,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _renderer: {fileID: 1702476118}
+  _lockColor: {r: 1, g: 0.78431374, b: 0.39215687, a: 0.19607843}
+  _normalColor: {r: 1, g: 1, b: 1, a: 0.09803922}
   _blocksData: {fileID: 11400000, guid: ae02d56b61310724185b0c3f380e0279, type: 2}
 --- !u!212 &1702476118
 SpriteRenderer:

@@ -29,11 +29,10 @@ MonoBehaviour:
     - -1
     - 0
     - 1
-    _allowedRotations: 0000000001000000
+    _allowedRotations: 00000000
   - _type: 2
     _allowedPositionsX:
     - -1.5
-    - -0.5
     - 0.5
     - 1.5
     _allowedRotations: 0000000003000000
@@ -41,7 +40,6 @@ MonoBehaviour:
     _allowedPositionsX:
     - -1.5
     - -0.5
-    - 0.5
     - 1.5
     _allowedRotations: 0000000001000000
   - _type: 4
@@ -54,20 +52,19 @@ MonoBehaviour:
     _allowedPositionsX:
     - -0.5
     - -1.5
-    - 0.5
     - 1.5
-    _allowedRotations: 0000000002000000
+    _allowedRotations: 0000000001000000
   - _type: 6
     _allowedPositionsX:
     - -1.5
     - -0.5
     - 0.5
     - 1.5
-    _allowedRotations: 0000000002000000
+    _allowedRotations: 000000000100000003000000
   - _type: 7
     _allowedPositionsX:
     - 1.5
     - 0.5
     - -0.5
     - -1.5
-    _allowedRotations: 0000000002000000
+    _allowedRotations: 0000000001000000

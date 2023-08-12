@@ -7,7 +7,12 @@ public class GuideBeam : MonoBehaviour
 {
     // V A R I A B L E S
 
+    [Header("RENDER")]
     [SerializeField] private SpriteRenderer _renderer;
+    [SerializeField] private Color _lockColor;
+    [SerializeField] private Color _normalColor;
+
+    [Header("DATA")]
     [SerializeField] private BlocksDataSO _blocksData;
 
     private Transform _parent;
@@ -35,6 +40,7 @@ public class GuideBeam : MonoBehaviour
         // Attach to block.
         transform.SetParent(p_block.transform);
 
+        Unlock();
         AdaptToBlock();
         _renderer.enabled = true;
     }
@@ -63,6 +69,9 @@ public class GuideBeam : MonoBehaviour
         _auxPos.y = _blocksData.OffsetOf[_currentType][_rotationIndex];
         transform.localPosition = _auxPos;
     }
+
+    public void Lock() => _renderer.color = _lockColor;
+    public void Unlock() => _renderer.color = _normalColor;
 
     public void Stop()
     {

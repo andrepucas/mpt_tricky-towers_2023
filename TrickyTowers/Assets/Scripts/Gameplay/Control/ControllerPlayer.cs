@@ -82,8 +82,20 @@ public class ControllerPlayer : ControllerAbstract
             _inputDraggedX = Mathf.Abs(Input.mousePosition.x - _inputLastHoldPos.x);
             _inputDraggedY = _inputLastHoldPos.y - Input.mousePosition.y;
 
-            // If dragging sideways.
-            if (_inputDraggedX > (_inputWidth * _gameData.DragSideSnap))
+            // If already dragging down.
+            if (_inputDraggingDown) return;
+
+            // User drags down.
+            if (_inputDraggedY > _inputHeight)
+            {
+                _inputLastHoldPos = Input.mousePosition;
+                _inputDraggingSide = false;
+                _inputDraggingDown = true;
+                _guideBeam.Lock();
+            }
+
+            // User drags sideways.
+            else if (_inputDraggedX > (_inputWidth * _gameData.DragSideSnap))
             {
                 _currentBlock.transform.Translate(
                     _gameData.DragSideSnap * _inputDragDir, 0, 0, Space.World);
@@ -91,14 +103,6 @@ public class ControllerPlayer : ControllerAbstract
                 _inputLastHoldPos = Input.mousePosition;
                 _inputDraggingSide = true;
                 _inputDraggingDown = false;
-            }
-
-            // If dragging down.
-            else if (_inputDraggedY > _inputHeight)
-            {
-                _inputLastHoldPos = Input.mousePosition;
-                _inputDraggingSide = false;
-                _inputDraggingDown = true;
             }
         }
 
@@ -127,6 +131,7 @@ public class ControllerPlayer : ControllerAbstract
                 }
             }
 
+            _guideBeam.Unlock();
             _inputDraggingSide = false;
             _inputDraggingDown = false;
             _inputPressedThisBlock = false;
@@ -203,6 +208,9 @@ public class ControllerPlayer : ControllerAbstract
         if (p_block == _currentBlock)
         {
             _currentBlock = null;
+            _inputDraggingSide = false;
+            _inputDraggingDown = false;
+            _inputPressedThisBlock = false;
             GetNewBlock(_blocksData.LayerPlayer);
         }
     }
