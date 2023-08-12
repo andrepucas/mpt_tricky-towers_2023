@@ -41,7 +41,7 @@ public abstract class ControllerAbstract : MonoBehaviour
                 }
             }
 
-            if (_targetHeight > 0 && (_targetHeight != transform.position.y))
+            if (_targetHeight >= 0 && (_targetHeight != transform.position.y))
             {
                 transform.position = Vector3.MoveTowards(transform.position, 
                     Vector3.up * _targetHeight, 

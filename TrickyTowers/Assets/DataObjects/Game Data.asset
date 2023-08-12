@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _numberOfLives: 5
   _infiniteLives: 0
-  _finishHeight: 10
+  _finishHeight: 20
   _camPreviewTime: 1
   _camPreviewDelay: 1
   _camFollowDelay: 1

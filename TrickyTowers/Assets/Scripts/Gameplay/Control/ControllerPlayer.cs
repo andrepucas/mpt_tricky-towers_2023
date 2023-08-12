@@ -53,6 +53,17 @@ public class ControllerPlayer : ControllerAbstract
 
         if (!_isActive || _isPaused || _currentBlock == null) return;
 
+        // If being dragged down, move block down fast.
+        if (_inputDraggingDown && _inputPressedThisBlock)
+        {
+            _currentBlock.transform.Translate(Vector3.down * 
+                _gameData.DragDownSpeed * Time.deltaTime, Space.World);
+        }
+
+        // If not, move block down at normal speed.
+        else _currentBlock.transform.Translate(
+            Vector3.down * _gameData.NormalSpeed * Time.deltaTime, Space.World);
+
         // Input - On press.
         if (Input.GetMouseButtonDown(0))
         {
@@ -120,17 +131,6 @@ public class ControllerPlayer : ControllerAbstract
             _inputDraggingDown = false;
             _inputPressedThisBlock = false;
         }
-
-        // If being dragged down, move block down fast.
-        if (_inputDraggingDown && _inputPressedThisBlock)
-        {
-            _currentBlock.transform.Translate(Vector3.down * 
-                _gameData.DragDownSpeed * Time.deltaTime, Space.World);
-        }
-
-        // If not, move block down at normal speed.
-        else _currentBlock.transform.Translate(
-            Vector3.down * _gameData.NormalSpeed * Time.deltaTime, Space.World);
     }
 
     // M E T H O D S
@@ -172,8 +172,12 @@ public class ControllerPlayer : ControllerAbstract
         // Ignore if it's not a player block.
         if (p_layer != _blocksData.LayerPlayer) return;
 
-        if (_currentBlock == null) 
+        if (_currentBlock != null)
+        {
+            _inputDraggingSide = false;
+            _inputDraggingDown = false;
             _inputPressedThisBlock = false;
+        }
 
         base.HandleOldBlock();
 
@@ -185,16 +189,22 @@ public class ControllerPlayer : ControllerAbstract
     private new void HandleBlockLost(Block p_block)
     {
         // Ignore if it's not a player block.
-        if (p_block.gameObject.layer != _blocksData.LayerPlayer || !_isActive) 
+        if (p_block.gameObject.layer != _blocksData.LayerPlayer) 
             return;
+
+        base.HandleBlockLost(p_block);
+
+        if (!_isActive) return;
 
         _currentLives--;
         OnLivesUpdated?.Invoke(_currentLives);
 
         // If the lost block was the player's. Get a new one.
-        if (p_block == _currentBlock) GetNewBlock(_blocksData.LayerPlayer);
-
-        base.HandleBlockLost(p_block);
+        if (p_block == _currentBlock)
+        {
+            _currentBlock = null;
+            GetNewBlock(_blocksData.LayerPlayer);
+        }
     }
 
     public void Pause(bool p_paused)

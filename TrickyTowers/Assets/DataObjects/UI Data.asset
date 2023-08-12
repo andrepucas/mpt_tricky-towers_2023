@@ -38,6 +38,6 @@ MonoBehaviour:
   _endCountCycle: 1
   _endCountAnimTime: 0.25
   _endCountWinSize: 300
-  _endCountLoseSize: 200
+  _endCountLoseSize: 150
   _endSpriteWin: {fileID: 21300000, guid: 0f63b27ec2c3fda4ea2b7dad15c81017, type: 3}
   _endSpriteLose: {fileID: 21300000, guid: bc9ba5f12a091e94281965f0dbd8ceb0, type: 3}

@@ -32,17 +32,31 @@ public class Block : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D p_other)
     {
-        if (p_other.gameObject.tag == _blocksData.TagLimits && !_isOutOfBounds)
+        if (!_isOutOfBounds)
+        {
+            if (p_other.gameObject.tag == _blocksData.TagLimits)
+            {
+                _isOutOfBounds = true;
+                Control(false);
+                OnOutOfBounds?.Invoke(this);
+            }
+
+            else if (_isControlled)
+            {
+                Control(false);
+                OnPlaced?.Invoke(gameObject.layer);
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D p_other)
+    {
+        if (p_other.gameObject.tag == _blocksData.TagLoseAnchor && !_isOutOfBounds
+            && _isControlled)
         {
             _isOutOfBounds = true;
             Control(false);
             OnOutOfBounds?.Invoke(this);
-        }
-
-        else if (_isControlled)
-        {
-            Control(false);
-            OnPlaced?.Invoke(gameObject.layer);
         }
     }
 

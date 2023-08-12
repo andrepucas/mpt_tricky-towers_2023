@@ -13,6 +13,8 @@ public class BlocksDataSO : ScriptableObject
     [SerializeField][Range(0.01f, 0.1f)] private float _controlledBlockRadius = 0.05f;
     [Tooltip("Name of the losing area colliders.")]
     [SerializeField] private string _tagLimits;
+    [Tooltip("Name of the losing area anchor collider.")]
+    [SerializeField] private string _tagLoseAnchor;
     [Tooltip("Name of the tag to apply to colliders when placed.")]
     [SerializeField] private string _tagPlaced;
     [Tooltip("Layer (int) of the blocks used by the player.")]
@@ -23,6 +25,7 @@ public class BlocksDataSO : ScriptableObject
     public IReadOnlyList<BlockData> AllBlocks => _allBlocks;
     public float ControlledBlockRadius => _controlledBlockRadius;
     public string TagLimits => _tagLimits;
+    public string TagLoseAnchor => _tagLoseAnchor;
     public string TagPlaced => _tagPlaced;
     public int LayerPlayer => _layerPlayer;
     public int LayerCPU => _layerCpu;

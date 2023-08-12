@@ -10,6 +10,7 @@ public class ControllerCPU : ControllerAbstract
 
     [SerializeField] private CpuOpponentDataSO _cpuData;
 
+    private bool _isFirstMove;
     private int _randomIndex;
     private float _newTargetPosX;
     private float _moveDelay;
@@ -57,6 +58,7 @@ public class ControllerCPU : ControllerAbstract
     {
         FollowTower(false);
         transform.position = p_startPos;
+        _isFirstMove = true;
     }
 
     public new void Activate(bool p_active)
@@ -72,8 +74,7 @@ public class ControllerCPU : ControllerAbstract
         if (p_layer != _blocksData.LayerCPU) return;
 
         StopAllCoroutines();
-
-        base.HandleOldBlock();
+        HandleOldBlock();
 
         _currentBlock = _blockPool.GetCpuBlock();
         _currentBlock.Control(true);
@@ -83,21 +84,41 @@ public class ControllerCPU : ControllerAbstract
 
     private void RandomAction()
     {
-        // Define random position based on limits.
-        _randomIndex = Random.Range(0, _cpuData.RandomPositionsX.Count);
-        _newTargetPosX = _cpuData.RandomPositionsX[_randomIndex];
-
-        if (_currentBlock.Type != BlockType.I && _currentBlock.Type != BlockType.O)
-            _newTargetPosX += _gameData.DragSideSnap;
-        
-        if (_cpuData.Behaviour == CpuBehaviour.LIMIT_RANDOM)
+        if (_cpuData.Behaviour == CpuBehaviour.LIMITED_RANDOM)
         {
-            // Define number of times rotated, based on the block limits defined.
-            _rotationsNum = _cpuData.GetCpuBlockLimits[_currentBlock.Type]
-                [Random.Range(0, _cpuData.GetCpuBlockLimits[_currentBlock.Type].Count)];
+            // Override first move.
+            if (_isFirstMove)
+            {
+                _newTargetPosX = _cpuData.CpuLimitedPosOf[_currentBlock.Type][0];
+                _rotationsNum = _cpuData.CpuLimitedRotOf[_currentBlock.Type][0];
+                _isFirstMove = false;
+            }
+
+            else
+            {  
+                // Random position, based on the limits for this block type.
+                _newTargetPosX = _cpuData.CpuLimitedPosOf[_currentBlock.Type]
+                    [Random.Range(0, _cpuData.CpuLimitedPosOf[_currentBlock.Type].Count)];
+
+                // Random number of rotations, based on the limits for this block type.
+                _rotationsNum = _cpuData.CpuLimitedRotOf[_currentBlock.Type]
+                    [Random.Range(0, _cpuData.CpuLimitedRotOf[_currentBlock.Type].Count)];
+            }
         }
 
-        else _rotationsNum = Random.Range(0, 4);
+        else
+        {
+            // Position based on the general defined limits.
+            _randomIndex = Random.Range(0, _cpuData.RandomPositionsX.Count);
+            _newTargetPosX = _cpuData.RandomPositionsX[_randomIndex];
+
+            // Offset position for som block types.
+            if (_currentBlock.Type != BlockType.I && _currentBlock.Type != BlockType.O)
+                _newTargetPosX += _gameData.DragSideSnap;
+
+            // Fully random rotation.
+            _rotationsNum = Random.Range(0, 4);
+        }
 
         if (_newTargetPosX != 0) StartCoroutine(RandomMove());
         if (_rotationsNum != 0) StartCoroutine(RandomRotate());
@@ -106,13 +127,17 @@ public class ControllerCPU : ControllerAbstract
     private new void HandleBlockLost(Block p_block)
     {
         // Ignore if it's not a CPU block.
-        if (p_block.gameObject.layer != _blocksData.LayerCPU || !_isActive)
+        if (p_block.gameObject.layer != _blocksData.LayerCPU)
             return;
 
-        // If the lost block was the CPU's. Get a new one.
-        if (p_block == _currentBlock) GetNewBlock(_blocksData.LayerCPU);
-
         base.HandleBlockLost(p_block);
+
+        // If the lost block was the CPU's. Get a new one.
+        if (p_block == _currentBlock && _isActive)
+        {
+            _currentBlock = null;
+            GetNewBlock(_blocksData.LayerCPU);
+        }
     }
 
     // C O R O U T I N E S

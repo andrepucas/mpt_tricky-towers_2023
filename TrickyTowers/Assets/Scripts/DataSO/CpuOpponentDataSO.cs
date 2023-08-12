@@ -30,19 +30,25 @@ public class CpuOpponentDataSO : ScriptableObject
     [Header("RANDOM")]
     [Tooltip("X coordinates for the CPU to place blocks.")]
     [SerializeField] private float[] _randomPositionsX;
-    [SerializeField] private CpuBlockRandomLimit[] _blockLimits;
+    [SerializeField] private CpuBlockRandomLimit[] _blockRandomLimits;
 
-    private Dictionary<BlockType, List<int>> _cpuBlockLimits;
+    private Dictionary<BlockType, List<int>> _blockRotLimits;
+    private Dictionary<BlockType, List<float>> _blockPosLimits;
 
     public IReadOnlyList<float> RandomPositionsX => _randomPositionsX;
-    public IReadOnlyDictionary<BlockType, List<int>> GetCpuBlockLimits => _cpuBlockLimits;
+    public IReadOnlyDictionary<BlockType, List<int>> CpuLimitedRotOf => _blockRotLimits;
+    public IReadOnlyDictionary<BlockType, List<float>> CpuLimitedPosOf => _blockPosLimits;
 
     public void InitializeDictionaries()
     {
-        _cpuBlockLimits = new Dictionary<BlockType, List<int>>();
+        _blockRotLimits = new Dictionary<BlockType, List<int>>();
+        _blockPosLimits = new Dictionary<BlockType, List<float>>();
 
-        foreach(CpuBlockRandomLimit f_blockLimit in _blockLimits)
-            _cpuBlockLimits.Add(f_blockLimit.Type, f_blockLimit.AllowedRotations);
+        foreach(CpuBlockRandomLimit f_blockLimit in _blockRandomLimits)
+        {
+            _blockRotLimits.Add(f_blockLimit.Type, f_blockLimit.AllowedRotations);
+            _blockPosLimits.Add(f_blockLimit.Type, f_blockLimit.AllowedPositionsX);
+        }
     }
 }
 
@@ -50,8 +56,12 @@ public class CpuOpponentDataSO : ScriptableObject
 public struct CpuBlockRandomLimit
 {
     [SerializeField] private BlockType _type;
+    [Tooltip("Pre-selected positions (x) for this block to land at. [0] will be used for first move.")]
+    [SerializeField] private List<float> _allowedPositionsX;
+    [Tooltip("Pre-selected rotations that this block is allowed to make by the CPU. [0] will be used for first move.")]
     [SerializeField] private List<int> _allowedRotations;
 
     public readonly BlockType Type => _type;
+    public readonly List<float> AllowedPositionsX => _allowedPositionsX;
     public readonly List<int> AllowedRotations => _allowedRotations;
 }

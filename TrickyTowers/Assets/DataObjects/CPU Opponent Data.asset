@@ -12,27 +12,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caac9da9ea845164197254017578fdec, type: 3}
   m_Name: CPU Opponent Data
   m_EditorClassIdentifier: 
-  _blockLimits:
-  - _type: 1
-    _allowedRotations: 0000000001000000
-  - _type: 2
-    _allowedRotations: 0000000002000000
-  - _type: 3
-    _allowedRotations: 0000000002000000
-  - _type: 4
-    _allowedRotations: 00000000
-  - _type: 5
-    _allowedRotations: 0000000001000000
-  - _type: 6
-    _allowedRotations: 0000000002000000
-  - _type: 7
-    _allowedRotations: 0000000001000000
+  _behaviour: 2
+  _moveSpeedMultiplier: 3
+  _minActionDelay: 0.1
+  _maxActionDelay: 1
+  _actionStepTime: 0.1
   _randomPositionsX:
   - -2
   - -1
   - 0
   - 1
-  _moveSpeedMultiplier: 3
-  _minActionDelay: 0.1
-  _maxActionDelay: 1
-  _actionStepTime: 0.1
+  _blockRandomLimits:
+  - _type: 1
+    _allowedPositionsX:
+    - -2
+    - -1
+    - 0
+    - 1
+    _allowedRotations: 0000000001000000
+  - _type: 2
+    _allowedPositionsX:
+    - -1.5
+    - -0.5
+    - 0.5
+    - 1.5
+    _allowedRotations: 0000000003000000
+  - _type: 3
+    _allowedPositionsX:
+    - -1.5
+    - -0.5
+    - 0.5
+    - 1.5
+    _allowedRotations: 0000000001000000
+  - _type: 4
+    _allowedPositionsX:
+    - 2
+    - 0
+    - -2
+    _allowedRotations: 00000000
+  - _type: 5
+    _allowedPositionsX:
+    - -0.5
+    - -1.5
+    - 0.5
+    - 1.5
+    _allowedRotations: 0000000002000000
+  - _type: 6
+    _allowedPositionsX:
+    - -1.5
+    - -0.5
+    - 0.5
+    - 1.5
+    _allowedRotations: 0000000002000000
+  - _type: 7
+    _allowedPositionsX:
+    - 1.5
+    - 0.5
+    - -0.5
+    - -1.5
+    _allowedRotations: 0000000002000000

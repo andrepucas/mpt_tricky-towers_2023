@@ -6,5 +6,5 @@ public enum CpuBehaviour
 {
     STACKER,
     FULL_RANDOM,
-    LIMIT_RANDOM
+    LIMITED_RANDOM
 }
