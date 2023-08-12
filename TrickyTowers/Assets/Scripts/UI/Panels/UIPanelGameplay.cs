@@ -25,8 +25,6 @@ public class UIPanelGameplay : UIPanelAbstract
     [Header("LIVES")]
     [SerializeField] private TMP_Text _livesText;
     [SerializeField] private Image _livesImage;
-    [SerializeField] private Color _livesColorRed;
-    [SerializeField] private Color _livesColorWhite;
 
     [Header("COUNTDOWNS")]
     [SerializeField] private TMP_Text _winCountdownTxt;
@@ -139,10 +137,10 @@ public class UIPanelGameplay : UIPanelAbstract
         _animTime = 0;
         
         // Lerp to red.
-        while (_livesImage.color != _livesColorRed)
+        while (_livesImage.color != _uiData.ColorRed)
         {
-            _livesImage.color = Color.Lerp(
-                _livesColorWhite, _livesColorRed, _animTime / _uiData.LivesColorLerpTime);
+            _livesImage.color = Color.Lerp(_uiData.ColorWhite, _uiData.ColorRed, 
+                _animTime / _uiData.LivesColorLerpTime);
 
             _animTime += Time.unscaledDeltaTime;
             yield return null;
@@ -153,10 +151,10 @@ public class UIPanelGameplay : UIPanelAbstract
         _animTime = 0;
         
         // Lerp back to white.
-        while (_livesImage.color != _livesColorWhite)
+        while (_livesImage.color != _uiData.ColorWhite)
         {
-            _livesImage.color = Color.Lerp(
-                _livesColorRed, _livesColorWhite, _animTime / _uiData.LivesColorLerpTime);
+            _livesImage.color = Color.Lerp(_uiData.ColorRed, _uiData.ColorWhite, 
+                _animTime / _uiData.LivesColorLerpTime);
 
             _animTime += Time.unscaledDeltaTime;
             yield return null;

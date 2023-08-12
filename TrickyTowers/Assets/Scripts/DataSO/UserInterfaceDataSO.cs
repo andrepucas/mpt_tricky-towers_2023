@@ -7,11 +7,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "UI Data", menuName = "Data/UI Data")]
 public class UserInterfaceDataSO : ScriptableObject
 {
-    [Header("DEBUG")]
-    [SerializeField] private bool _displayFPS;
-
-    public bool DisplayFPS => _displayFPS;
-
     [Header("GENERAL")]
     [Tooltip("Time (s) to wait before revealing main menu. 0 might lead to laggy opening animation.")]
     [SerializeField][Range(0, 2)] private float _setupDelay;
@@ -19,10 +14,16 @@ public class UserInterfaceDataSO : ScriptableObject
     [SerializeField][Range(0.5f, 5)] private float _revealFade;
     [Tooltip("Transition time (s) for UI panels to open or close.")]
     [SerializeField][Range(0, 2)] private float _panelFade;
+    [SerializeField] private Color _colorRed;
+    [SerializeField] private Color _colorGold;
+    [SerializeField] private Color _colorWhite;
 
     public float SetupDelay => _setupDelay;
     public float RevealFade => _revealFade;
     public float PanelFade => _panelFade;
+    public Color ColorRed => _colorRed;
+    public Color ColorGold => _colorGold;
+    public Color ColorWhite => _colorWhite;
 
     [Header("PRE-START")]
     [SerializeField] private bool _displayStartCount = true;

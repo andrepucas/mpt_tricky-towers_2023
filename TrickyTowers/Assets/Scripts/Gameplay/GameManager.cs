@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     [Header("DATA")]
     [SerializeField] private GameDataSO _gameData;
     [SerializeField] private BlocksDataSO _blocksData;
+    [SerializeField] private SavedDataSO _savedData;
     
     private GameState _currentState;
     private bool _inVersusMode;
@@ -39,7 +40,9 @@ public class GameManager : MonoBehaviour
         ControllerPlayer.OnLivesUpdated += CheckGameOver;
 
         UIManager.OnSetupComplete += ToMenu;
+        UIPanelMainMenu.OnSettingsButton += ToSettings;
         UIPanelMainMenu.OnPlayButtons += GameModePicked;
+        UIPanelSettings.OnBackButton += ConfirmSettings;
         UIPanelPreStart.OnCountdownEnd += Play;
         UIPanelGameplay.OnPauseButton += ToPause;
         UIPanelGameplay.OnCountdownEnd += EndGame;
@@ -55,7 +58,9 @@ public class GameManager : MonoBehaviour
         ControllerPlayer.OnLivesUpdated -= CheckGameOver;
 
         UIManager.OnSetupComplete -= ToMenu;
+        UIPanelMainMenu.OnSettingsButton -= ToSettings;
         UIPanelMainMenu.OnPlayButtons -= GameModePicked;
+        UIPanelSettings.OnBackButton -= ConfirmSettings;
         UIPanelPreStart.OnCountdownEnd -= Play;
         UIPanelGameplay.OnPauseButton -= ToPause;
         UIPanelGameplay.OnCountdownEnd -= EndGame;
@@ -88,6 +93,8 @@ public class GameManager : MonoBehaviour
                 _blocksData.InitializeDictionaries();
 
                 _toggleableGameObjs.SetActive(false);
+
+                ApplySavedSettings();
 
                 break;
 
@@ -163,6 +170,12 @@ public class GameManager : MonoBehaviour
         OnNewGameState?.Invoke(_currentState);
     }
 
+    private void ApplySavedSettings()
+    {
+        Application.targetFrameRate = _savedData.FpsOptions[
+            PlayerPrefs.GetInt(_savedData.FpsPrefName, _savedData.FpsDefault)];
+    }
+
     private void CheckGameOver(int p_lives)
     {
         if (p_lives == 0) UpdateGameState(GameState.END_LOSE);
@@ -212,6 +225,14 @@ public class GameManager : MonoBehaviour
         else UpdateGameState(GameState.END_LOSE);
     }
 
+    private void ConfirmSettings()
+    {
+        PlayerPrefs.Save();
+        ApplySavedSettings();
+        UpdateGameState(GameState.MAIN_MENU);
+    }
+
+    private void ToSettings() => UpdateGameState(GameState.SETTINGS);
     private void ToPreStart() => UpdateGameState(GameState.PRE_START);
     private void ToMenu() => UpdateGameState(GameState.MAIN_MENU);
     private void ToPause() => UpdateGameState(GameState.PAUSE);

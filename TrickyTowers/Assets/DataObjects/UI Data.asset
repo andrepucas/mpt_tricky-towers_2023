@@ -16,6 +16,9 @@ MonoBehaviour:
   _setupDelay: 0.5
   _revealFade: 0.5
   _panelFade: 0.1
+  _colorRed: {r: 1, g: 0.39215687, b: 0.39215687, a: 1}
+  _colorGold: {r: 1, g: 0.78431374, b: 0.39215687, a: 1}
+  _colorWhite: {r: 0.9411765, g: 0.9411765, b: 0.9411765, a: 1}
   _displayStartCount: 1
   _startCountStrings:
   - 3

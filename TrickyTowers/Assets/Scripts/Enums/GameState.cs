@@ -6,6 +6,7 @@ public enum GameState
 {
     SETUP,
     MAIN_MENU,
+    SETTINGS,
     PRE_START,
     GAMEPLAY,
     PAUSE,

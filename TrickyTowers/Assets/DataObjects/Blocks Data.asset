@@ -45,7 +45,7 @@ MonoBehaviour:
     - 0.5
   - _type: 4
     _prefab: {fileID: 5695804657445213946, guid: ed749572889a68a42afd1ab3a7b8fc78, type: 3}
-    _color: {r: 1, g: 0.78039217, b: 0.39215687, a: 1}
+    _color: {r: 1, g: 0.78431374, b: 0.39215687, a: 1}
     _sprite: {fileID: 21300000, guid: 1350e6e061f550d43af19a2663d385a0, type: 3}
     _widthLoop: 02000000020000000200000002000000
     _offsetLoop:

@@ -14,7 +14,10 @@ public class UIPanelPreStart : UIPanelAbstract
 
     // V A R I A B L E S
 
+    [Header("ELEMENTS")]
     [SerializeField] private TMP_Text _countdownTxt;
+
+    [Header("DATA")]
     [SerializeField] private UserInterfaceDataSO _uiData;
 
     private YieldInstruction _timerTime;
