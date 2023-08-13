@@ -35,6 +35,7 @@ public class UIPanelGameplay : UIPanelAbstract
     [SerializeField] private UserInterfaceDataSO _uiData;
 
     private float _animTime;
+    private Coroutine _livesAnim;
     private Coroutine _winCountdown;
     private Coroutine _loseCountdown;
     private YieldInstruction _timerTime;
@@ -93,8 +94,8 @@ public class UIPanelGameplay : UIPanelAbstract
         {
             if (_uiData.AnimateLivesLost && !p_reset)
             {
-                StopAllCoroutines();
-                StartCoroutine(AnimateLivesCount(p_lives));
+                StopCoroutine(_livesAnim);
+                _livesAnim = StartCoroutine(AnimateLivesCount(p_lives));
             }
 
             else _livesText.text = p_lives.ToString();
