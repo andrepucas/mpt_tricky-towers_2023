@@ -70,7 +70,7 @@ public class GuideBeam : MonoBehaviour
     public void Lock()
     {
         _lockColor = _blocksData.ColorOf[_currentType];
-        _lockColor.a = 0.5f;
+        _lockColor.a = 0.25f;
         _renderer.color = _lockColor;
     }
 
