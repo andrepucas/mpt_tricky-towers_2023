@@ -15,6 +15,8 @@ public class FXFeedback : MonoBehaviour
     [SerializeField] private AudioSource _blockLost;
     [SerializeField] private AudioSource _blockRotate;
     [SerializeField] private AudioSource _blockLocked;
+    [SerializeField] private AudioSource _win;
+    [SerializeField] private AudioSource _lose;
 
     [Header("DATA")]
     [SerializeField] private SavedDataSO _savedData;
@@ -59,7 +61,7 @@ public class FXFeedback : MonoBehaviour
         // Play sound.
         if (PlayerPrefs.GetInt(_savedData.SfxPrefName, _savedData.SfxDefault) == 1)
         {
-            if (p_fast) _blockPlaced.pitch = Random.Range(.2f, .5f);
+            if (p_fast) _blockPlaced.pitch = Random.Range(.4f, .6f);
             else _blockPlaced.pitch = Random.Range(2f, 3f);
 
             _blockPlaced.Play();
@@ -110,6 +112,28 @@ public class FXFeedback : MonoBehaviour
         // Vibrate.
         if (PlayerPrefs.GetInt(_savedData.VibrationPrefName, _savedData.VibrationDefault) == 1)
             Vibration.VibratePop();
+    }
+
+    public void OnWin()
+    {
+        // Play sound.
+        if (PlayerPrefs.GetInt(_savedData.SfxPrefName, _savedData.SfxDefault) == 1)
+            _win.Play();
+
+        // Vibrate.
+        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName, _savedData.VibrationDefault) == 1)
+            Vibration.Vibrate();
+    }
+
+    public void OnLose()
+    {
+        // Play sound.
+        if (PlayerPrefs.GetInt(_savedData.SfxPrefName, _savedData.SfxDefault) == 1)
+            _lose.Play();
+
+        // Vibrate.
+        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName, _savedData.VibrationDefault) == 1)
+            Vibration.Vibrate();
     }
 }
 

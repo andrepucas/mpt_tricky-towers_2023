@@ -105,6 +105,8 @@ public class UIPanelGameplay : UIPanelAbstract
 
     private void ToggleWinCounter(bool p_toggle)
     {
+        if (!IsOpen) return;
+
         if (p_toggle) _winCountdown = StartCoroutine(CountdownToWin());
 
         else
@@ -117,6 +119,8 @@ public class UIPanelGameplay : UIPanelAbstract
 
     private void ToggleLoseCounter(bool p_toggle)
     {
+        if (!IsOpen) return;
+
         if (p_toggle) _loseCountdown = StartCoroutine(CountdownToLose());
 
         else

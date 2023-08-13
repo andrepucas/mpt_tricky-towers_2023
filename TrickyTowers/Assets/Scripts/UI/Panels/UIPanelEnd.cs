@@ -18,6 +18,7 @@ public class UIPanelEnd : UIPanelAbstract
     [SerializeField] private Image _titleImg;
     [SerializeField] private GameObject _cpuDisplay;
     [SerializeField] private Image _backgroundImg;
+    [SerializeField] private FXFeedback _feedback;
 
     [Header("DATA")]
     [SerializeField] private UserInterfaceDataSO _uiData;
@@ -39,9 +40,7 @@ public class UIPanelEnd : UIPanelAbstract
         _backgroundImg.color = _uiData.ColorGold;
         Open(p_fade);
 
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibratePeek();
+        _feedback.OnWin();
     }
 
     public void OpenLose(float p_fade = 0)
@@ -51,9 +50,7 @@ public class UIPanelEnd : UIPanelAbstract
         _backgroundImg.color = _uiData.ColorRed;
         Open(p_fade);
 
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibrateNope();
+        _feedback.OnLose();
     }
 
     private void ToggleCpuDisplay(bool p_toggle) => _cpuDisplay.SetActive(p_toggle);
