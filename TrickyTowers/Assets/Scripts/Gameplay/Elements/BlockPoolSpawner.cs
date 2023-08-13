@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+/// <summary>
+/// Custom pooling system for blocks.
+/// </summary>
 public class BlockPoolSpawner : MonoBehaviour
 {
     // E V E N T S
