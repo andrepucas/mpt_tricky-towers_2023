@@ -86,11 +86,11 @@ public class UIPanelGameplay : UIPanelAbstract
         _nextBlockImage.color = p_color;
     }
 
-    private void UpdateLivesCount(int p_lives)
+    private void UpdateLivesCount(int p_lives, bool p_reset)
     {
         if (p_lives >= 0)
         {
-            if (_uiData.AnimateLivesLost)
+            if (_uiData.AnimateLivesLost && !p_reset)
             {
                 StopAllCoroutines();
                 StartCoroutine(AnimateLivesCount(p_lives));
@@ -128,7 +128,14 @@ public class UIPanelGameplay : UIPanelAbstract
 
     private void ToggleCpuDisplay(bool p_toggle) => _cpuDisplay.SetActive(p_toggle);
 
-    public void BtnPause() => OnPauseButton?.Invoke();
+    public void BtnPause()
+    {
+        OnPauseButton?.Invoke();
+
+        // Vibrate
+        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+            Vibration.VibratePop();
+    }
 
     // C O R O U T I N E S
 
@@ -147,6 +154,10 @@ public class UIPanelGameplay : UIPanelAbstract
         }
 
         _livesText.text = p_lives.ToString();
+
+        // Vibrate
+        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+            Vibration.VibrateNope();
 
         _animTime = 0;
         
@@ -172,6 +183,10 @@ public class UIPanelGameplay : UIPanelAbstract
             _winCountdownTxt.fontSize = 0;
             _winCountdownTxt.text = _uiData.EndCountStrings[i];
             _winCoroutineTime = 0;
+
+            // Vibrate
+            if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+                Vibration.VibratePop();
 
             // Lerp text appearing.
             while (_winCountdownTxt.fontSize < _uiData.EndCountWinSize)
@@ -201,6 +216,10 @@ public class UIPanelGameplay : UIPanelAbstract
             _loseCountdownTxt.fontSize = 0;
             _loseCountdownTxt.text = _uiData.EndCountStrings[i];
             _loseCoroutineTime = 0;
+
+            // Vibrate
+            if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+                Vibration.VibratePop();
 
             // Lerp text appearing.
             while (_loseCountdownTxt.fontSize < _uiData.EndCountLoseSize)

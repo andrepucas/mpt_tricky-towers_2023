@@ -55,6 +55,10 @@ public class UIPanelPreStart : UIPanelAbstract
             _countdownTxt.text = _uiData.StartCountStrings[i];
             _coroutineTime = 0;
 
+            // Vibrate
+            if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+                Vibration.VibratePop();
+
             // Lerp text appearing.
             while (_countdownTxt.fontSize < _uiData.StartCountSize)
             {
@@ -67,6 +71,10 @@ public class UIPanelPreStart : UIPanelAbstract
 
             yield return _timerTime;
         }
+
+        // Vibrate
+        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+            Vibration.VibratePeek();
 
         // Raise event when countdown ends.
         OnCountdownEnd?.Invoke();

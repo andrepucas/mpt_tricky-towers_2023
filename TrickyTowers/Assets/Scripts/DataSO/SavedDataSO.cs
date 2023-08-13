@@ -13,7 +13,7 @@ public class SavedDataSO : ScriptableObject
     [Tooltip("FPS target options available to pick.")]
     [SerializeField] private int[] _fpsOptions;
     [Tooltip("FPS target default value. (Index of options list)")]
-    [SerializeField][Range(0, 2)] private int _fpsDefault;
+    [SerializeField][Range(0, 1)] private int _fpsDefault;
 
     public string FpsPrefName => _fpsPrefName;
     public IReadOnlyList<int> FpsOptions => _fpsOptions;
@@ -27,4 +27,14 @@ public class SavedDataSO : ScriptableObject
 
     public string ShowFpsPrefName => _showFpsPrefName;
     public int ShowFPSDefault => _showFpsDefault;
+
+    [Header("VIBRATION")]
+
+    [Tooltip("Name to save and load Vibration toggle in Player Prefs.")]
+    [SerializeField] private string _vibrationPrefName;
+    [Tooltip("Vibration default toggle. 0 = OFF, 1 = ON")]
+    [SerializeField][Range(0, 1)] private int _vibrationDefault;
+
+    public string VibrationPrefName => _vibrationPrefName;
+    public int VibrationDefault => _vibrationDefault;
 }

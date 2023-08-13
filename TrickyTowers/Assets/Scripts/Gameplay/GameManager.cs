@@ -91,6 +91,7 @@ public class GameManager : MonoBehaviour
                 _finishLine.Initialize(_finishPos);
 
                 _blocksData.InitializeDictionaries();
+                Vibration.Init();
 
                 _toggleableGameObjs.SetActive(false);
 
@@ -172,11 +173,14 @@ public class GameManager : MonoBehaviour
 
     private void ApplySavedSettings()
     {
+        if (PlayerPrefs.GetInt(_savedData.FpsPrefName) >= _savedData.FpsOptions.Count)
+            PlayerPrefs.SetInt(_savedData.FpsPrefName, _savedData.FpsDefault);
+        
         Application.targetFrameRate = _savedData.FpsOptions[
             PlayerPrefs.GetInt(_savedData.FpsPrefName, _savedData.FpsDefault)];
     }
 
-    private void CheckGameOver(int p_lives)
+    private void CheckGameOver(int p_lives, bool p_reset)
     {
         if (p_lives == 0) UpdateGameState(GameState.END_LOSE);
     }

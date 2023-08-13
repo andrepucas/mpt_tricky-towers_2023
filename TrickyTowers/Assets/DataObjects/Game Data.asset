@@ -22,8 +22,8 @@ MonoBehaviour:
   _widthUnits: 18
   _heightUnits: 40
   _rotateDirection: -1
-  _normalSpeed: 2
-  _dragDownSpeed: 10
+  _normalSpeed: 3
+  _dragDownSpeed: 12
   _dragSideSnap: 0.5
   _swipeMaxTime: 0.3
   _swipeMinUnits: 5

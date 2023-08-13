@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Saved Data
   m_EditorClassIdentifier: 
   _fpsPrefName: FPS
-  _fpsOptions: 1e0000003c00000078000000
-  _fpsDefault: 2
+  _fpsOptions: 1e0000003c000000
+  _fpsDefault: 1
   _showFpsPrefName: ShowFPS
   _showFpsDefault: 0
+  _vibrationPrefName: Vibration
+  _vibrationDefault: 1

@@ -38,6 +38,10 @@ public class UIPanelEnd : UIPanelAbstract
         _titleImg.color = _uiData.ColorGold;
         _backgroundImg.color = _uiData.ColorGold;
         Open(p_fade);
+
+        // Vibrate
+        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+            Vibration.VibratePeek();
     }
 
     public void OpenLose(float p_fade = 0)
@@ -46,10 +50,29 @@ public class UIPanelEnd : UIPanelAbstract
         _titleImg.color = _uiData.ColorWhite;
         _backgroundImg.color = _uiData.ColorRed;
         Open(p_fade);
+
+        // Vibrate
+        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+            Vibration.VibrateNope();
     }
 
     private void ToggleCpuDisplay(bool p_toggle) => _cpuDisplay.SetActive(p_toggle);
 
-    public void BtnRetry() => OnRetryButton?.Invoke();
-    public void BtnQuit() => OnQuitButton?.Invoke();
+    public void BtnRetry()
+    {
+        OnRetryButton?.Invoke();
+
+        // Vibrate
+        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+            Vibration.VibratePop();
+    }
+
+    public void BtnQuit()
+    {
+        OnQuitButton?.Invoke();
+
+        // Vibrate
+        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+            Vibration.VibratePop();
+    }
 }

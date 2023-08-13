@@ -9,11 +9,12 @@ public class ControllerPlayer : ControllerAbstract
 {
     // E V E N T S
 
-    public static event Action<int> OnLivesUpdated;
+    public static event Action<int, bool> OnLivesUpdated;
 
     // V A R I A B L E S
 
     [SerializeField] private GuideBeam _guideBeam;
+    [SerializeField] private SavedDataSO _savedData;
 
     // Game session control.
     private int _currentLives;
@@ -159,7 +160,7 @@ public class ControllerPlayer : ControllerAbstract
         if (_gameData.InfiniteLives) _currentLives = -1;
         else _currentLives = _gameData.NumberOfLives;
 
-        OnLivesUpdated?.Invoke(_currentLives);
+        OnLivesUpdated?.Invoke(_currentLives, true);
 
         // Make camera pan circuit from finish line to starting base.
         StartCoroutine(PanDownFromFinish(p_startPos));
@@ -182,6 +183,10 @@ public class ControllerPlayer : ControllerAbstract
             _inputDraggingSide = false;
             _inputDraggingDown = false;
             _inputPressedThisBlock = false;
+
+            // Vibrate
+            if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+                Vibration.VibratePop();
         }
 
         base.HandleOldBlock();
@@ -202,7 +207,7 @@ public class ControllerPlayer : ControllerAbstract
         if (!_isActive) return;
 
         _currentLives--;
-        OnLivesUpdated?.Invoke(_currentLives);
+        OnLivesUpdated?.Invoke(_currentLives, false);
 
         // If the lost block was the player's. Get a new one.
         if (p_block == _currentBlock)

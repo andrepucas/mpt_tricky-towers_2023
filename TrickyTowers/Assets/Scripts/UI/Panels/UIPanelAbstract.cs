@@ -10,6 +10,7 @@ public abstract class UIPanelAbstract : MonoBehaviour
 
     [Tooltip("Canvas group of this panel.")]
     [SerializeField] private CanvasGroup _canvasGroup;
+    [SerializeField] protected SavedDataSO _savedData;
 
     public bool IsOpen {get; private set;}
 

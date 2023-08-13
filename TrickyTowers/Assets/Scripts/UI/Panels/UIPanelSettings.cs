@@ -16,12 +16,11 @@ public class UIPanelSettings : UIPanelAbstract
     [Header("ELEMENTS")]
     [SerializeField] private TMP_Text _fpsTxt;
     [SerializeField] private GameObject _showFpsToggle;
-
-    [Header("DATA")]
-    [SerializeField] private SavedDataSO _savedData;
+    [SerializeField] private GameObject _vibrationToggle;
 
     private int _fpsIndex;
     private int _showFpsIndex;
+    private int _vibrationIndex;
 
     // M E T H O D S
 
@@ -35,6 +34,9 @@ public class UIPanelSettings : UIPanelAbstract
 
         _showFpsIndex = PlayerPrefs.GetInt(_savedData.ShowFpsPrefName, _savedData.ShowFPSDefault);
         UpdateShowFPS();
+
+        _vibrationIndex = PlayerPrefs.GetInt(_savedData.VibrationPrefName, _savedData.VibrationDefault);
+        UpdateVibration();
 
         base.Open(p_fade);
     }
@@ -53,6 +55,14 @@ public class UIPanelSettings : UIPanelAbstract
         PlayerPrefs.SetInt(_savedData.ShowFpsPrefName, _showFpsIndex);
     }
 
+    private void UpdateVibration()
+    {
+        if (_vibrationIndex == 0) _vibrationToggle.SetActive(false);
+        else _vibrationToggle.SetActive(true);
+
+        PlayerPrefs.SetInt(_savedData.VibrationPrefName, _vibrationIndex);
+    }
+
     public void BtnFPS()
     {
         _fpsIndex++;
@@ -60,6 +70,10 @@ public class UIPanelSettings : UIPanelAbstract
         if (_fpsIndex >= _savedData.FpsOptions.Count) _fpsIndex = 0;
 
         UpdateFPS();
+
+        // Vibrate
+        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+            Vibration.VibratePop();
     }
 
     public void BtnShowFPS()
@@ -68,7 +82,30 @@ public class UIPanelSettings : UIPanelAbstract
         else _showFpsIndex = 0;
 
         UpdateShowFPS();
+
+        // Vibrate
+        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+            Vibration.VibratePop();
     }
 
-    public void BtnBack() => OnBackButton?.Invoke();
+    public void BtnVibration()
+    {
+        if (_vibrationIndex == 0) _vibrationIndex = 1;
+        else _vibrationIndex = 0;
+
+        UpdateVibration();
+
+        // Vibrate
+        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+            Vibration.VibratePop();
+    }
+
+    public void BtnBack()
+    {
+        OnBackButton?.Invoke();
+
+        // Vibrate
+        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
+            Vibration.VibratePop();
+    }
 }

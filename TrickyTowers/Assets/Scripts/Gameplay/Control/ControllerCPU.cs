@@ -112,7 +112,7 @@ public class ControllerCPU : ControllerAbstract
             _randomIndex = Random.Range(0, _cpuData.RandomPositionsX.Count);
             _newTargetPosX = _cpuData.RandomPositionsX[_randomIndex];
 
-            // Offset position for som block types.
+            // Offset position for some block types.
             if (_currentBlock.Type != BlockType.I && _currentBlock.Type != BlockType.O)
                 _newTargetPosX += _gameData.DragSideSnap;
 
@@ -153,7 +153,7 @@ public class ControllerCPU : ControllerAbstract
         while (_currentBlock.transform.position.x != _newTargetPosX)
         {
             _currentBlock.transform.Translate(
-                _gameData.DragSideSnap * _moveDirection, 0, 0, Space.World);
+                _gameData.DragSideSnap * _moveDirection * 0.5f, 0, 0, Space.World);
 
             yield return _actionStepDelay;
         }
