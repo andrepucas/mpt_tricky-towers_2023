@@ -94,7 +94,7 @@ public class UIPanelGameplay : UIPanelAbstract
         {
             if (_uiData.AnimateLivesLost && !p_reset)
             {
-                StopCoroutine(_livesAnim);
+                if (_livesAnim != null) StopCoroutine(_livesAnim);
                 _livesAnim = StartCoroutine(AnimateLivesCount(p_lives));
             }
 
