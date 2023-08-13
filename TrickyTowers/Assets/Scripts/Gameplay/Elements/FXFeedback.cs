@@ -61,8 +61,10 @@ public class FXFeedback : MonoBehaviour
         // Play sound.
         if (PlayerPrefs.GetInt(_savedData.SfxPrefName, _savedData.SfxDefault) == 1)
         {
-            if (p_fast) _blockPlaced.pitch = Random.Range(.4f, .6f);
-            else _blockPlaced.pitch = Random.Range(2f, 3f);
+            if (p_fast) _blockPlaced.volume = .5f;
+            else _blockPlaced.volume = .2f;
+            
+            _blockPlaced.pitch = Random.Range(2f, 3f);
 
             _blockPlaced.Play();
         }
