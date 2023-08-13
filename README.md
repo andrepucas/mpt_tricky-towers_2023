@@ -32,7 +32,7 @@ Furthermore, to facilitate fast play-testing using different game variables, a s
 
 **Framerate.** The game ran smoothly on all tested devices, with the most noticeable frame-drop happening when instantiating the blocks, in the very first round played, right before the countdown starts. Originally, 120 FPS was set as a toggle in the settings menu, which ran smoothly on my device. However, the other 2 tested devices, which have 120Hz refresh rates, would lock at 60 FPS. For that reason, and considering the small difference between 60 and 120 FPS in a project like this, the framerate is now capped at 60. To test higher frame rates, simply add it as an option under Assets/DataObjects/Saved Data.
 
-**Build Settings** Code stripping is set to High, under the Player/Optimization options and compression method is LZ4HC. These 2 simple toggles alone help reduce binary size.
+**Build Settings.** Code stripping is set to High, under the Player/Optimization options and compression method is LZ4HC. These 2 simple toggles alone help reduce binary size.
 
 ## Performance actions considered but not implemented
 
