@@ -16,7 +16,7 @@ public class UIPanelPreStart : UIPanelAbstract
 
     [Header("ELEMENTS")]
     [SerializeField] private TMP_Text _countdownTxt;
-    [SerializeField] private FeedbackManager _feedback;
+    [SerializeField] private FXFeedback _feedback;
 
     [Header("DATA")]
     [SerializeField] private UserInterfaceDataSO _uiData;

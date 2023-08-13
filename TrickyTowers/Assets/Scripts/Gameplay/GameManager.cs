@@ -238,7 +238,6 @@ public class GameManager : MonoBehaviour
     private void ConfirmSettings()
     {
         PlayerPrefs.Save();
-        ApplySavedSettings();
         UpdateGameState(GameState.MAIN_MENU);
     }
 

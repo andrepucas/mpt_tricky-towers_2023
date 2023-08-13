@@ -29,7 +29,7 @@ public class UIPanelGameplay : UIPanelAbstract
     [Header("COUNTDOWNS")]
     [SerializeField] private TMP_Text _winCountdownTxt;
     [SerializeField] private TMP_Text _loseCountdownTxt;
-    [SerializeField] private FeedbackManager _feedback;
+    [SerializeField] private FXFeedback _feedback;
     
     [Header("DATA")]
     [SerializeField] private UserInterfaceDataSO _uiData;

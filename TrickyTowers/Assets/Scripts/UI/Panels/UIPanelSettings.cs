@@ -19,6 +19,7 @@ public class UIPanelSettings : UIPanelAbstract
     [SerializeField] private GameObject _vibrationToggle;
     [SerializeField] private GameObject _sfxToggle;
     [SerializeField] private GameObject _musicToggle;
+    [SerializeField] private MusicLoader _musicLoader;
 
     private int _fpsIndex;
     private int _showFpsIndex;
@@ -54,6 +55,8 @@ public class UIPanelSettings : UIPanelAbstract
     private void UpdateFPS()
     {
         _fpsTxt.text = _savedData.FpsOptions[_fpsIndex].ToString();
+        Application.targetFrameRate = _savedData.FpsOptions[_fpsIndex];
+
         PlayerPrefs.SetInt(_savedData.FpsPrefName, _fpsIndex);
     }
 
@@ -83,8 +86,17 @@ public class UIPanelSettings : UIPanelAbstract
 
     private void UpdateMusic()
     {
-        if (_musicIndex == 0) _musicToggle.SetActive(false);
-        else _musicToggle.SetActive(true);
+        if (_musicIndex == 0)
+        {
+            _musicToggle.SetActive(false);
+            _musicLoader.StopAndUnload();
+        }
+
+        else
+        {
+            _musicToggle.SetActive(true);
+            _musicLoader.LoadAndPlay();
+        }
 
         PlayerPrefs.SetInt(_savedData.MusicPrefName, _musicIndex);
     }

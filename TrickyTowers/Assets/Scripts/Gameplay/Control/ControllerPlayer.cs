@@ -14,7 +14,7 @@ public class ControllerPlayer : ControllerAbstract
     // V A R I A B L E S
 
     [SerializeField] private GuideBeam _guideBeam;
-    [SerializeField] private FeedbackManager _feedback;
+    [SerializeField] private FXFeedback _feedback;
 
     // Game session control.
     private int _currentLives;
@@ -93,6 +93,7 @@ public class ControllerPlayer : ControllerAbstract
                 _inputDraggingSide = false;
                 _inputDraggingDown = true;
                 _guideBeam.Lock();
+                _feedback.OnBlockLocked();
             }
 
             // User drags sideways.
@@ -118,6 +119,7 @@ public class ControllerPlayer : ControllerAbstract
                 // Rotate block.
                 _currentBlock.transform.Rotate(0, 0, 90 * _gameData.RotateDir);
                 _guideBeam.CounterRotation(-_gameData.RotateDir);
+                _feedback.OnBlockRotate();
             }
 
             // If was being dragged to the side.
@@ -180,11 +182,11 @@ public class ControllerPlayer : ControllerAbstract
 
         if (_currentBlock != null)
         {
+            _feedback.OnBlockPlaced(_inputDraggingDown);
+
             _inputDraggingSide = false;
             _inputDraggingDown = false;
             _inputPressedThisBlock = false;
-
-            _feedback.OnBlockPlaced();
         }
 
         base.HandleOldBlock();
