@@ -37,4 +37,24 @@ public class SavedDataSO : ScriptableObject
 
     public string VibrationPrefName => _vibrationPrefName;
     public int VibrationDefault => _vibrationDefault;
+
+    [Header("SOUND EFFECTS")]
+
+    [Tooltip("Name to save and load SFX toggle in Player Prefs.")]
+    [SerializeField] private string _sfxPrefName;
+    [Tooltip("SFX default toggle. 0 = OFF, 1 = ON")]
+    [SerializeField][Range(0, 1)] private int _sfxDefault;
+
+    public string SfxPrefName => _sfxPrefName;
+    public int SfxDefault => _sfxDefault;
+
+    [Header("MUSIC")]
+
+    [Tooltip("Name to save and load Music toggle in Player Prefs.")]
+    [SerializeField] private string _musicPrefName;
+    [Tooltip("Music default toggle. 0 = OFF, 1 = ON")]
+    [SerializeField][Range(0, 1)] private int _musicDefault;
+
+    public string MusicPrefName => _musicPrefName;
+    public int MusicDefault => _musicDefault;
 }

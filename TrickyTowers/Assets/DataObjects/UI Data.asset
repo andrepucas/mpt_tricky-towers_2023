@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7e05fe059598b49a5fa2af62f2e686, type: 3}
   m_Name: UI Data
   m_EditorClassIdentifier: 
-  _displayFPS: 1
   _setupDelay: 0.5
   _revealFade: 0.5
   _panelFade: 0.1

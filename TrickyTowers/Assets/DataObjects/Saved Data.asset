@@ -19,3 +19,7 @@ MonoBehaviour:
   _showFpsDefault: 0
   _vibrationPrefName: Vibration
   _vibrationDefault: 1
+  _sfxPrefName: Sfx
+  _sfxDefault: 1
+  _musicPrefName: Music
+  _musicDefault: 1

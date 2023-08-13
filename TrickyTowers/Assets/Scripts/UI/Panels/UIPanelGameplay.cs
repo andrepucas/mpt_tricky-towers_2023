@@ -29,6 +29,7 @@ public class UIPanelGameplay : UIPanelAbstract
     [Header("COUNTDOWNS")]
     [SerializeField] private TMP_Text _winCountdownTxt;
     [SerializeField] private TMP_Text _loseCountdownTxt;
+    [SerializeField] private FeedbackManager _feedback;
     
     [Header("DATA")]
     [SerializeField] private UserInterfaceDataSO _uiData;
@@ -128,25 +129,18 @@ public class UIPanelGameplay : UIPanelAbstract
 
     private void ToggleCpuDisplay(bool p_toggle) => _cpuDisplay.SetActive(p_toggle);
 
-    public void BtnPause()
-    {
-        OnPauseButton?.Invoke();
-
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibratePop();
-    }
+    public void BtnPause() => OnPauseButton?.Invoke();
 
     // C O R O U T I N E S
 
     private IEnumerator AnimateLivesCount(int p_lives)
     {
         _animTime = 0;
-        
-        // Lerp to red.
-        while (_livesImage.color != _uiData.ColorRed)
+
+        // Lerp to white.
+        while (_livesImage.color != _uiData.ColorWhite)
         {
-            _livesImage.color = Color.Lerp(_uiData.ColorWhite, _uiData.ColorRed, 
+            _livesImage.color = Color.Lerp(_uiData.ColorRed, _uiData.ColorWhite, 
                 _animTime / _uiData.LivesColorLerpTime);
 
             _animTime += Time.unscaledDeltaTime;
@@ -155,16 +149,12 @@ public class UIPanelGameplay : UIPanelAbstract
 
         _livesText.text = p_lives.ToString();
 
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibrateNope();
-
         _animTime = 0;
-        
-        // Lerp back to white.
-        while (_livesImage.color != _uiData.ColorWhite)
+
+        // Lerp to red.
+        while (_livesImage.color != _uiData.ColorRed)
         {
-            _livesImage.color = Color.Lerp(_uiData.ColorRed, _uiData.ColorWhite, 
+            _livesImage.color = Color.Lerp(_uiData.ColorWhite, _uiData.ColorRed, 
                 _animTime / _uiData.LivesColorLerpTime);
 
             _animTime += Time.unscaledDeltaTime;
@@ -184,9 +174,8 @@ public class UIPanelGameplay : UIPanelAbstract
             _winCountdownTxt.text = _uiData.EndCountStrings[i];
             _winCoroutineTime = 0;
 
-            // Vibrate
-            if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-                Vibration.VibratePop();
+            if (i < _uiData.StartCountStrings.Count - 1) _feedback.OnUICountdownPop();
+            else _feedback.OnUICountdownPeek();
 
             // Lerp text appearing.
             while (_winCountdownTxt.fontSize < _uiData.EndCountWinSize)
@@ -217,9 +206,8 @@ public class UIPanelGameplay : UIPanelAbstract
             _loseCountdownTxt.text = _uiData.EndCountStrings[i];
             _loseCoroutineTime = 0;
 
-            // Vibrate
-            if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-                Vibration.VibratePop();
+            if (i < _uiData.StartCountStrings.Count - 1) _feedback.OnUICountdownPop();
+            else _feedback.OnUICountdownPeek();
 
             // Lerp text appearing.
             while (_loseCountdownTxt.fontSize < _uiData.EndCountLoseSize)

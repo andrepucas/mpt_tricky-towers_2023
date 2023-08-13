@@ -17,30 +17,7 @@ public class UIPanelMainMenu : UIPanelAbstract
     public new void Close(float p_fade = 0) => base.Close(p_fade);
     public new void Open(float p_fade = 0) => base.Open(p_fade);
 
-    public void BtnSettings()
-    {
-        OnSettingsButton?.Invoke();
-
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibratePop();
-    }
-
-    public void BtnSolo()
-    {
-        OnPlayButtons?.Invoke(false);
-
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibratePop();
-    }
-
-    public void BtnVersus()
-    {
-        OnPlayButtons?.Invoke(true);
-
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibratePop();
-    }
+    public void BtnSettings() => OnSettingsButton?.Invoke();
+    public void BtnSolo() => OnPlayButtons?.Invoke(false);
+    public void BtnVersus() => OnPlayButtons?.Invoke(true);
 }

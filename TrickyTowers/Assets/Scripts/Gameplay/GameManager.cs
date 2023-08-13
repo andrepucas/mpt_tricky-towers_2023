@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     [Header("GAME ELEMENTS")]
     [SerializeField] private FinishLine _finishLine;
     [SerializeField] protected BlockPoolSpawner _blockPool;
+    [SerializeField] private MusicLoader _musicLoader;
     [SerializeField] private GameObject _toggleableGameObjs;
 
     [Header("DATA")]
@@ -175,9 +176,14 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerPrefs.GetInt(_savedData.FpsPrefName) >= _savedData.FpsOptions.Count)
             PlayerPrefs.SetInt(_savedData.FpsPrefName, _savedData.FpsDefault);
-        
+
         Application.targetFrameRate = _savedData.FpsOptions[
             PlayerPrefs.GetInt(_savedData.FpsPrefName, _savedData.FpsDefault)];
+
+        if (PlayerPrefs.GetInt(_savedData.MusicPrefName, _savedData.MusicDefault) == 1)
+            _musicLoader.LoadAndPlay();
+
+        else _musicLoader.StopAndUnload();
     }
 
     private void CheckGameOver(int p_lives, bool p_reset)

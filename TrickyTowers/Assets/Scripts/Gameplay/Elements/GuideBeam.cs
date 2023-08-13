@@ -9,7 +9,6 @@ public class GuideBeam : MonoBehaviour
 
     [Header("RENDER")]
     [SerializeField] private SpriteRenderer _renderer;
-    [SerializeField] private Color _lockColor;
     [SerializeField] private Color _normalColor;
 
     [Header("DATA")]
@@ -19,6 +18,7 @@ public class GuideBeam : MonoBehaviour
     private BlockType _currentType;
     private Vector2 _auxSize;
     private Vector2 _auxPos;
+    private Color _lockColor;
     private int _rotationIndex;
 
     // M E T H O D S
@@ -58,9 +58,6 @@ public class GuideBeam : MonoBehaviour
 
     private void AdaptToBlock()
     {
-        // Color.
-        // _renderer.color = _blocksData.ColorOf[_currentType];
-
         // Width.
         _auxSize.x = _blocksData.WidthOf[_currentType][_rotationIndex];
         _renderer.size = _auxSize;
@@ -70,7 +67,13 @@ public class GuideBeam : MonoBehaviour
         transform.localPosition = _auxPos;
     }
 
-    public void Lock() => _renderer.color = _lockColor;
+    public void Lock()
+    {
+        _lockColor = _blocksData.ColorOf[_currentType];
+        _lockColor.a = 0.5f;
+        _renderer.color = _lockColor;
+    }
+
     public void Unlock() => _renderer.color = _normalColor;
 
     public void Stop()

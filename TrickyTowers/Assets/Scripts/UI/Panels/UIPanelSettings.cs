@@ -17,10 +17,14 @@ public class UIPanelSettings : UIPanelAbstract
     [SerializeField] private TMP_Text _fpsTxt;
     [SerializeField] private GameObject _showFpsToggle;
     [SerializeField] private GameObject _vibrationToggle;
+    [SerializeField] private GameObject _sfxToggle;
+    [SerializeField] private GameObject _musicToggle;
 
     private int _fpsIndex;
     private int _showFpsIndex;
     private int _vibrationIndex;
+    private int _sfxIndex;
+    private int _musicIndex;
 
     // M E T H O D S
 
@@ -37,6 +41,12 @@ public class UIPanelSettings : UIPanelAbstract
 
         _vibrationIndex = PlayerPrefs.GetInt(_savedData.VibrationPrefName, _savedData.VibrationDefault);
         UpdateVibration();
+
+        _sfxIndex = PlayerPrefs.GetInt(_savedData.SfxPrefName, _savedData.SfxDefault);
+        UpdateSFX();
+
+        _musicIndex = PlayerPrefs.GetInt(_savedData.MusicPrefName, _savedData.MusicDefault);
+        UpdateMusic();
 
         base.Open(p_fade);
     }
@@ -63,6 +73,22 @@ public class UIPanelSettings : UIPanelAbstract
         PlayerPrefs.SetInt(_savedData.VibrationPrefName, _vibrationIndex);
     }
 
+    private void UpdateSFX()
+    {
+        if (_sfxIndex == 0) _sfxToggle.SetActive(false);
+        else _sfxToggle.SetActive(true);
+
+        PlayerPrefs.SetInt(_savedData.SfxPrefName, _sfxIndex);
+    }
+
+    private void UpdateMusic()
+    {
+        if (_musicIndex == 0) _musicToggle.SetActive(false);
+        else _musicToggle.SetActive(true);
+
+        PlayerPrefs.SetInt(_savedData.MusicPrefName, _musicIndex);
+    }
+
     public void BtnFPS()
     {
         _fpsIndex++;
@@ -70,10 +96,6 @@ public class UIPanelSettings : UIPanelAbstract
         if (_fpsIndex >= _savedData.FpsOptions.Count) _fpsIndex = 0;
 
         UpdateFPS();
-
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibratePop();
     }
 
     public void BtnShowFPS()
@@ -82,10 +104,6 @@ public class UIPanelSettings : UIPanelAbstract
         else _showFpsIndex = 0;
 
         UpdateShowFPS();
-
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibratePop();
     }
 
     public void BtnVibration()
@@ -94,18 +112,23 @@ public class UIPanelSettings : UIPanelAbstract
         else _vibrationIndex = 0;
 
         UpdateVibration();
-
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibratePop();
     }
 
-    public void BtnBack()
+    public void BtnSfx()
     {
-        OnBackButton?.Invoke();
+        if (_sfxIndex == 0) _sfxIndex = 1;
+        else _sfxIndex = 0;
 
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibratePop();
+        UpdateSFX();
     }
+
+    public void BtnMusic()
+    {
+        if (_musicIndex == 0) _musicIndex = 1;
+        else _musicIndex = 0;
+
+        UpdateMusic();
+    }
+
+    public void BtnBack() => OnBackButton?.Invoke();
 }

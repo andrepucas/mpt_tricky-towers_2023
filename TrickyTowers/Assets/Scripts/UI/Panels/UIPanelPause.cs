@@ -18,30 +18,7 @@ public class UIPanelPause : UIPanelAbstract
     public new void Close(float p_fade = 0) => base.Close(p_fade);
     public new void Open(float p_fade = 0) => base.Open(p_fade);
 
-    public void BtnResume()
-    {
-        OnResumeButton?.Invoke();
-
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibratePop();
-    }
-
-    public void BtnRetry()
-    {
-        OnRetryButton?.Invoke();
-
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibratePop();
-    }
-
-    public void BtnQuit()
-    {
-        OnQuitButton?.Invoke();
-
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibratePop();
-    }
+    public void BtnResume() => OnResumeButton?.Invoke();
+    public void BtnRetry() => OnRetryButton?.Invoke();
+    public void BtnQuit() => OnQuitButton?.Invoke();
 }

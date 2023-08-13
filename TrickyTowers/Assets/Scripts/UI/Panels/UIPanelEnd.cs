@@ -58,21 +58,6 @@ public class UIPanelEnd : UIPanelAbstract
 
     private void ToggleCpuDisplay(bool p_toggle) => _cpuDisplay.SetActive(p_toggle);
 
-    public void BtnRetry()
-    {
-        OnRetryButton?.Invoke();
-
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibratePop();
-    }
-
-    public void BtnQuit()
-    {
-        OnQuitButton?.Invoke();
-
-        // Vibrate
-        if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-            Vibration.VibratePop();
-    }
+    public void BtnRetry() => OnRetryButton?.Invoke();
+    public void BtnQuit() => OnQuitButton?.Invoke();
 }

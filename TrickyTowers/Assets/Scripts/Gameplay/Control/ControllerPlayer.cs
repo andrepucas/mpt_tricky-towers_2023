@@ -14,7 +14,7 @@ public class ControllerPlayer : ControllerAbstract
     // V A R I A B L E S
 
     [SerializeField] private GuideBeam _guideBeam;
-    [SerializeField] private SavedDataSO _savedData;
+    [SerializeField] private FeedbackManager _feedback;
 
     // Game session control.
     private int _currentLives;
@@ -184,9 +184,7 @@ public class ControllerPlayer : ControllerAbstract
             _inputDraggingDown = false;
             _inputPressedThisBlock = false;
 
-            // Vibrate
-            if (PlayerPrefs.GetInt(_savedData.VibrationPrefName) == 1)
-                Vibration.VibratePop();
+            _feedback.OnBlockPlaced();
         }
 
         base.HandleOldBlock();
@@ -208,6 +206,7 @@ public class ControllerPlayer : ControllerAbstract
 
         _currentLives--;
         OnLivesUpdated?.Invoke(_currentLives, false);
+        _feedback.OnBlockLost();
 
         // If the lost block was the player's. Get a new one.
         if (p_block == _currentBlock)
